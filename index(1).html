@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LP | Links</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(220, 38, 38, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(220, 38, 38, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-1 {
+            top: -200px;
+            left: -200px;
+            background: radial-gradient(circle, #dc2626 0%, transparent 70%);
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .glow-2 {
+            bottom: -200px;
+            right: -200px;
+            background: radial-gradient(circle, #991b1b 0%, transparent 70%);
+            animation: float2 18s ease-in-out infinite;
+        }
+
+        .glow-3 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #7f1d1d 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 50px) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-80px, -30px) scale(1.2); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid transparent;
+            background: linear-gradient(#0a0a0a, #0a0a0a) padding-box,
+                        linear-gradient(135deg, #dc2626, #7f1d1d, #dc2626) border-box;
+            box-shadow: 
+                0 0 30px rgba(220, 38, 38, 0.5),
+                0 0 60px rgba(220, 38, 38, 0.3),
+                inset 0 0 30px rgba(220, 38, 38, 0.1);
+            animation: avatarGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(220, 38, 38, 0.5), 0 0 60px rgba(220, 38, 38, 0.3), inset 0 0 30px rgba(220, 38, 38, 0.1); }
+            50% { box-shadow: 0 0 50px rgba(220, 38, 38, 0.7), 0 0 100px rgba(220, 38, 38, 0.4), inset 0 0 40px rgba(220, 38, 38, 0.2); }
+        }
+
+        .avatar-ring {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: #dc2626;
+            border-right-color: #991b1b;
+            animation: spin 8s linear infinite;
+        }
+
+        .avatar-ring:nth-child(2) {
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border-top-color: #7f1d1d;
+            border-right-color: transparent;
+            border-bottom-color: #dc2626;
+            animation: spin 12s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .username {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #dc2626 50%, #fff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shine 3s linear infinite;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .tagline {
+            color: #991b1b;
+            font-size: 1rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .links {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .link-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 1.2rem 1.5rem;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 16px;
+            text-decoration: none;
+            color: #fff;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.8s ease-out backwards;
+            cursor: pointer;
+        }
+
+        .link-card:nth-child(1) { animation-delay: 0.1s; }
+        .link-card:nth-child(2) { animation-delay: 0.2s; }
+        .link-card:nth-child(3) { animation-delay: 0.3s; }
+        .link-card:nth-child(4) { animation-delay: 0.4s; }
+        .link-card:nth-child(5) { animation-delay: 0.5s; }
+        .link-card:nth-child(6) { animation-delay: 0.6s; }
+        .link-card:nth-child(7) { animation-delay: 0.7s; }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .link-card:hover::before {
+            left: 100%;
+        }
+
+        .link-card:hover {
+            transform: translateX(10px) scale(1.02);
+            border-color: rgba(220, 38, 38, 0.6);
+            box-shadow: 
+                0 10px 40px rgba(220, 38, 38, 0.3),
+                0 0 60px rgba(220, 38, 38, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .link-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(127, 29, 29, 0.2));
+            border-radius: 12px;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: #dc2626;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+        }
+
+        .link-card:hover .link-icon {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: #fff;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+        }
+
+        .link-content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .link-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 0.2rem;
+        }
+
+        .link-desc {
+            font-size: 0.85rem;
+            color: #888;
+            transition: color 0.3s ease;
+        }
+
+        .link-card:hover .link-desc {
+            color: #dc2626;
+        }
+
+        .link-arrow {
+            font-size: 1.2rem;
+            color: #555;
+            transition: all 0.4s ease;
+        }
+
+        .link-card:hover .link-arrow {
+            color: #dc2626;
+            transform: translateX(5px);
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.4s ease,
+                        margin-top 0.4s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .dropdown-menu.active {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 0.75rem;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.5rem;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(220, 38, 38, 0.15);
+            border-radius: 12px;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            transform: translateX(-20px);
+            opacity: 0;
+        }
+
+        .dropdown-menu.active .dropdown-item {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .dropdown-menu.active .dropdown-item:nth-child(1) { transition-delay: 0.1s; }
+        .dropdown-menu.active .dropdown-item:nth-child(2) { transition-delay: 0.2s; }
+        .dropdown-menu.active .dropdown-item:nth-child(3) { transition-delay: 0.3s; }
+
+        .dropdown-item:hover {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: rgba(220, 38, 38, 0.4);
+            transform: translateX(8px);
+            box-shadow: 0 5px 20px rgba(220, 38, 38, 0.2);
+        }
+
+        .dropdown-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(220, 38, 38, 0.15);
+            border-radius: 8px;
+            margin-right: 0.8rem;
+            font-size: 1rem;
+            color: #dc2626;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover .dropdown-icon {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .dropdown-text {
+            flex: 1;
+        }
+
+        .dropdown-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .dropdown-arrow {
+            color: #555;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover .dropdown-arrow {
+            color: #dc2626;
+            transform: translateX(3px);
+        }
+
+        .rotate-arrow {
+            transition: transform 0.4s ease;
+        }
+
+        .rotate-arrow.active {
+            transform: rotate(180deg);
+        }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            animation: fadeIn 1s ease-out 1s backwards;
+        }
+
+        .footer-text {
+            color: #444;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        .footer-text span {
+            color: #dc2626;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .glitch-hover:hover {
+            animation: glitch 0.3s ease;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @media (max-width: 480px) {
+            .username {
+                font-size: 2.2rem;
+                letter-spacing: 4px;
+            }
+            
+            .avatar {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .link-card {
+                padding: 1rem 1.2rem;
+            }
+            
+            .link-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 1.3rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #dc2626, #7f1d1d);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #ef4444, #991b1b);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="bg-glow glow-3"></div>
+    <canvas id="particles"></canvas>
+
+    <div class="container">
+        <div class="profile">
+            <div class="avatar-container">
+                <div class="avatar-ring"></div>
+                <div class="avatar-ring"></div>
+                <img src="https://share.creavite.co/6995277ce4a21b3f8b0008cf.gif" alt="LP" class="avatar">
+            </div>
+            <h1 class="username">LP</h1>
+            <p class="tagline">Digital Creator</p>
+        </div>
+
+        <div class="links">
+            <a href="https://guns.lol/lp.dev" target="_blank" class="link-card glitch-hover">
+                <div class="link-icon">
+                    <i class="fas fa-crosshairs"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">GUNS.LOL</div>
+                    <div class="link-desc">Perfil principal</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+
+            <a href="https://youtube.com/@lpgamer.1" target="_blank" class="link-card glitch-hover">
+                <div class="link-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">YOUTUBE</div>
+                    <div class="link-desc">Vídeos longos e tutoriais</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+
+            <a href="https://www.tiktok.com/@lp.dev1" target="_blank" class="link-card glitch-hover">
+                <div class="link-icon">
+                    <i class="fab fa-tiktok"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">TIKTOK</div>
+                    <div class="link-desc">Vídeos curtos</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+
+            <a href="https://discord.com/users/1440641528321151099" target="_blank" class="link-card glitch-hover">
+                <div class="link-icon">
+                    <i class="fab fa-discord"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">DISCORD DM</div>
+                    <div class="link-desc">Me adicione no Discord</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+
+            <!-- Discord Server with Dropdown -->
+            <div class="dropdown-container">
+                <div class="link-card glitch-hover" onclick="toggleDropdown()">
+                    <div class="link-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="link-content">
+                        <div class="link-title">SERVIDORES DISCORD</div>
+                        <div class="link-desc">Junte-se a comunidade</div>
+                    </div>
+                    <div class="link-arrow rotate-arrow" id="dropdownArrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="https://discord.gg/6xEawyx4mm" target="_blank" class="dropdown-item">
+                        <div class="dropdown-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="dropdown-text">
+                            <div class="dropdown-title">NOTIFIER</div>
+                        </div>
+                        <div class="dropdown-arrow">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    
+                    <a href="https://discord.gg/HYzMEcFDwg" target="_blank" class="dropdown-item">
+                        <div class="dropdown-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="dropdown-text">
+                            <div class="dropdown-title">CENTRAL LP</div>
+                        </div>
+                        <div class="dropdown-arrow">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                    
+                    <a href="https://discord.gg/jsg3M3pvMa" target="_blank" class="dropdown-item">
+                        <div class="dropdown-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="dropdown-text">
+                            <div class="dropdown-title">B0T.EXE</div>
+                        </div>
+                        <div class="dropdown-arrow">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <a href="https://roblox.com/users/9184629305/profile" target="_blank" class="link-card glitch-hover">
+                <div class="link-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">ROBLOX</div>
+                    <div class="link-desc">Meu perfil no Roblox</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+
+            <a href="https://rekonise.com/u/lp.dev" target="_blank" class="link-card glitch-hover">
+                <div class="link-icon">
+                    <i class="fas fa-download"></i>
+                </div>
+                <div class="link-content">
+                    <div class="link-title">ARQUIVOS</div>
+                    <div class="link-desc">Downloads e arquivos</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text"><span>MADE BY LP</span></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            const menu = document.getElementById('dropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
+            menu.classList.toggle('active');
+            arrow.classList.toggle('active');
+        }
+
+        // Particle System
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        const particleCount = 60;
+        const connectionDistance = 120;
+        const maxConnections = 3;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.radius = Math.random() * 2 + 1;
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(220, 38, 38, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                let connections = 0;
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance && connections < maxConnections) {
+                        const alpha = (1 - distance / connectionDistance) * 0.3;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(220, 38, 38, ${alpha})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                        connections++;
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            drawConnections();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resize();
+            initParticles();
+        });
+
+        resize();
+        initParticles();
+        animate();
+
+        document.querySelectorAll('.link-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '100';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = 'auto';
+            });
+        });
+
+        setInterval(() => {
+            const username = document.querySelector('.username');
+            if (Math.random() > 0.95) {
+                username.style.textShadow = '2px 0 #dc2626, -2px 0 #7f1d1d';
+                setTimeout(() => {
+                    username.style.textShadow = 'none';
+                }, 100);
+            }
+        }, 2000);
+
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            document.querySelectorAll('.bg-glow').forEach((glow, index) => {
+                const speed = (index + 1) * 20;
+                glow.style.transform = `translate(${mouseX * speed}px, ${mouseY * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>/body>
+</html>
+</html>
