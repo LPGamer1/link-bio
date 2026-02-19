@@ -48,7 +48,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 .link-card:hover::before{left:100%;}
 .link-card:hover{transform:translateX(10px) scale(1.02);border-color:rgba(220,38,38,0.6);box-shadow:0 10px 40px rgba(220,38,38,0.3),0 0 60px rgba(220,38,38,0.1),inset 0 1px 0 rgba(255,255,255,0.1);}
 .link-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(220,38,38,0.2),rgba(127,29,29,0.2));border-radius:12px;margin-right:1rem;font-size:1.5rem;color:#dc2626;transition:all 0.4s ease;border:1px solid rgba(220,38,38,0.3);}
-.link-card:hover .link-icon{background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;transform:scale(1.1) rotate(5deg);box-shadow:0 0 20px rgba(220,38,38,0.5);}
+.link-card:hover .link-icon{background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;transform:scale(1.1) rotate(5deg);box-shadow:0 0 20px rgba(220, 38, 38, 0.5);}
 .link-content{flex:1;text-align:left;}
 .link-title{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:600;letter-spacing:1px;margin-bottom:0.2rem;}
 .link-desc{font-size:0.85rem;color:#888;transition:color 0.3s ease;}
@@ -104,7 +104,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 </div>
 <div class="links">
 
-<a href="https://bio.lp77.com.br" class="link-card">
+<a href="https://bio.lp77.com.br" class="link-card" onclick="trackClick('pagina_inicial')">
 <div class="link-icon"><i class="fas fa-home"></i></div>
 <div class="link-content">
 <div class="link-title">PÁGINA INICIAL</div>
@@ -113,7 +113,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow"><i class="fas fa-chevron-right"></i></div>
 </a>
 
-<a href="https://discord.gg/CGsHazGFvz" target="_blank" class="link-card">
+<a href="https://discord.gg/CGsHazGFvz" target="_blank" class="link-card" onclick="trackClick('discord_convite')">
 <div class="link-icon"><i class="fab fa-discord"></i></div>
 <div class="link-content">
 <div class="link-title">MEU DISCORD</div>
@@ -132,22 +132,22 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow rotate-arrow" id="arrow-pojav"><i class="fas fa-chevron-down"></i></div>
 </div>
 <div class="dropdown-menu" id="menu-pojav">
-<a href="https://rekonise.com/pojavlauncher-com-renderizacao-de-shaders-di7jt" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/pojavlauncher-com-renderizacao-de-shaders-di7jt" target="_blank" class="dropdown-item" onclick="trackClick('pojav_apk')">
 <div class="dropdown-icon"><i class="fab fa-android"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">POJAVLAUNCHER .APK</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
 </a>
-<a href="https://rekonise.com/shader-pojavlauncher-a65c8" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/shader-pojavlauncher-a65c8" target="_blank" class="dropdown-item" onclick="trackClick('pojav_shader')">
 <div class="dropdown-icon"><i class="fas fa-magic"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">SHADER POJAV</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
 </a>
-<a href="https://rekonise.com/cmpack-use-no-pojav-5he4m" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/cmpack-use-no-pojav-5he4m" target="_blank" class="dropdown-item" onclick="trackClick('pojav_cmpack')">
 <div class="dropdown-icon"><i class="fas fa-box-open"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">CMPACK POJAV</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
 </a>
-<a href="https://rekonise.com/shaders-bonus-cmpack-ns5t6" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/shaders-bonus-cmpack-ns5t6" target="_blank" class="dropdown-item" onclick="trackClick('pojav_shader_bonus')">
 <div class="dropdown-icon"><i class="fas fa-gift"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">SHADER BÔNUS (CMPACK)</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
@@ -165,12 +165,12 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow rotate-arrow" id="arrow-armas"><i class="fas fa-chevron-down"></i></div>
 </div>
 <div class="dropdown-menu" id="menu-armas">
-<a href="https://rekonise.com/armas3d-forge-desconpacte-foias" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/armas3d-forge-desconpacte-foias" target="_blank" class="dropdown-item" onclick="trackClick('armas_java')">
 <div class="dropdown-icon"><i class="fab fa-java"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">JAVA / FORGE</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
 </a>
-<a href="https://rekonise.com/actualguns_3d-sp36s" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/actualguns_3d-sp36s" target="_blank" class="dropdown-item" onclick="trackClick('armas_bedrock')">
 <div class="dropdown-icon"><i class="fas fa-cubes"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">BEDROCK MCPE</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
@@ -178,7 +178,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 </div>
 </div>
 
-<a href="https://www.mediafire.com/file/zcabkkkw9x39x8b/minecraft-hell-8.0.apk/file" target="_blank" class="link-card">
+<a href="https://www.mediafire.com/file/zcabkkkw9x39x8b/minecraft-hell-8.0.apk/file" target="_blank" class="link-card" onclick="trackClick('mc_terror')">
 <div class="link-icon"><i class="fas fa-ghost"></i></div>
 <div class="link-content">
 <div class="link-title">MINECRAFT DE TERROR</div>
@@ -197,12 +197,12 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow rotate-arrow" id="arrow-gta"><i class="fas fa-chevron-down"></i></div>
 </div>
 <div class="dropdown-menu" id="menu-gta">
-<a href="https://rekonise.com/instalador-do-gta-5-ycfa4" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/instalador-do-gta-5-ycfa4" target="_blank" class="dropdown-item" onclick="trackClick('gta_launcher')">
 <div class="dropdown-icon"><i class="fas fa-rocket"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">LAUNCHER GTA V</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
 </a>
-<a href="https://rekonise.com/gta-5-download-torrent-x1w5a" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/gta-5-download-torrent-x1w5a" target="_blank" class="dropdown-item" onclick="trackClick('gta_torrent')">
 <div class="dropdown-icon"><i class="fas fa-magnet"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">TORRENT GTA V</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
@@ -220,12 +220,12 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow rotate-arrow" id="arrow-forza"><i class="fas fa-chevron-down"></i></div>
 </div>
 <div class="dropdown-menu" id="menu-forza">
-<a href="https://rekonise.com/instalador-do-forza-horizon-5-link-direto-vigtm" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/instalador-do-forza-horizon-5-link-direto-vigtm" target="_blank" class="dropdown-item" onclick="trackClick('forza_launcher')">
 <div class="dropdown-icon"><i class="fas fa-rocket"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">LAUNCHER FORZA</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
 </a>
-<a href="https://rekonise.com/forza-horizon-5-link-torrent-jtuj7" target="_blank" class="dropdown-item">
+<a href="https://rekonise.com/forza-horizon-5-link-torrent-jtuj7" target="_blank" class="dropdown-item" onclick="trackClick('forza_torrent')">
 <div class="dropdown-icon"><i class="fas fa-magnet"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">TORRENT FORZA</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
@@ -243,12 +243,12 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow rotate-arrow" id="arrow-photoshop"><i class="fas fa-chevron-down"></i></div>
 </div>
 <div class="dropdown-menu" id="menu-photoshop">
-<a href="https://www.mediafire.com/file/huv28urd89c4v0l/Adobe_Photoshop_Express_v17.7.12_Premium.apk/file" target="_blank" class="dropdown-item">
+<a href="https://www.mediafire.com/file/huv28urd89c4v0l/Adobe_Photoshop_Express_v17.7.12_Premium.apk/file" target="_blank" class="dropdown-item" onclick="trackClick('photoshop_apk')">
 <div class="dropdown-icon"><i class="fab fa-android"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">PHOTOSHOP APK</div><div class="link-desc">Link Direto</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
 </a>
-<a href="https://www.mediafire.com/file/v2it43lqv52esa9/Pack_de_Edi%25C3%25A7%25C3%25A3o.zip/file" target="_blank" class="dropdown-item">
+<a href="https://www.mediafire.com/file/v2it43lqv52esa9/Pack_de_Edi%25C3%25A7%25C3%25A3o.zip/file" target="_blank" class="dropdown-item" onclick="trackClick('pack_edicao')">
 <div class="dropdown-icon"><i class="fas fa-folder-open"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">PACK DE EDIÇÃO</div><div class="link-desc">Link Direto</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
@@ -257,7 +257,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 </div>
 
 
-<a href="https://www.mediafire.com/file/8vq94at4z04tx4w/filmbr.apk/file" target="_blank" class="link-card">
+<a href="https://www.mediafire.com/file/8vq94at4z04tx4w/filmbr.apk/file" target="_blank" class="link-card" onclick="trackClick('app_filmes')">
 <div class="link-icon"><i class="fas fa-film"></i></div>
 <div class="link-content">
 <div class="link-title">APP FILMES GRÁTIS</div>
@@ -266,7 +266,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow"><i class="fas fa-chevron-right"></i></div>
 </a>
 
-<a href="https://www.mediafire.com/file/mtkg4nziasy0fzr/MassDM.zip/file" target="_blank" class="link-card">
+<a href="https://www.mediafire.com/file/mtkg4nziasy0fzr/MassDM.zip/file" target="_blank" class="link-card" onclick="trackClick('bot_massdm')">
 <div class="link-icon"><i class="fas fa-robot"></i></div>
 <div class="link-content">
 <div class="link-title">BOT MASSDM DISCORD</div>
@@ -275,7 +275,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow"><i class="fas fa-chevron-right"></i></div>
 </a>
 
-<a href="https://rekonise.com/wallpapers-personalizados-minecraft-ztzs1" target="_blank" class="link-card">
+<a href="https://rekonise.com/wallpapers-personalizados-minecraft-ztzs1" target="_blank" class="link-card" onclick="trackClick('wallpapers_mc')">
 <div class="link-icon"><i class="fas fa-image"></i></div>
 <div class="link-content">
 <div class="link-title">WALLPAPERS MINECRAFT</div>
@@ -300,6 +300,31 @@ window.addEventListener('resize',()=>{resize();initParticles();});resize();initP
 document.querySelectorAll('.link-card').forEach(card=>{card.addEventListener('mouseenter',function(){this.style.zIndex='100';});card.addEventListener('mouseleave',function(){this.style.zIndex='auto';});});
 setInterval(()=>{const username=document.querySelector('.username');if(Math.random()>0.95){username.style.textShadow='2px 0 #dc2626, -2px 0 #7f1d1d';setTimeout(()=>{username.style.textShadow='none';},100);}},2000);
 document.addEventListener('mousemove',(e)=>{const mouseX=e.clientX/window.innerWidth-0.5;const mouseY=e.clientY/window.innerHeight-0.5;document.querySelectorAll('.bg-glow').forEach((glow,index)=>{const speed=(index+1)*20;glow.style.transform=`translate(${mouseX*speed}px, ${mouseY*speed}px)`;});});
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyBITngbQd7w1bHpjMIBDiNeEfxdzatxJJ8",
+authDomain: "bio-lp-7.firebaseapp.com",
+projectId: "bio-lp-7",
+storageBucket: "bio-lp-7.firebasestorage.app",
+messagingSenderId: "936067121939",
+appId: "1:936067121939:web:40ca8485717363cad350e6",
+measurementId: "G-0L5L04Y19T"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+window.trackClick = function(nomeBotao) {
+logEvent(analytics, 'clique_download', {
+item_id: nomeBotao,
+item_name: nomeBotao
+});
+};
 </script>
 </body>
 </html>
