@@ -147,7 +147,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="dropdown-text"><div class="dropdown-title">CMPACK POJAV</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
 </a>
-<a href="https://rekonise.com/shaders-bonus-cmpack-ns5t6" target="_blank" class="dropdown-item" onclick="trackClick('pojav_shader_bonus')">
+<a href="https://rekonise.com/shaders-bonus-cmpack-ns5t6" target="_blank" class="dropdown-item" onclick="trackClick('pojav_bonus')">
 <div class="dropdown-icon"><i class="fas fa-gift"></i></div>
 <div class="dropdown-text"><div class="dropdown-title">SHADER BÔNUS (CMPACK)</div></div>
 <div class="dropdown-arrow"><i class="fas fa-external-link-alt"></i></div>
@@ -275,7 +275,7 @@ body{font-family:'Rajdhani',sans-serif;background:#0a0a0a;min-height:100vh;overf
 <div class="link-arrow"><i class="fas fa-chevron-right"></i></div>
 </a>
 
-<a href="https://rekonise.com/wallpapers-personalizados-minecraft-ztzs1" target="_blank" class="link-card" onclick="trackClick('wallpapers_mc')">
+<a href="https://rekonise.com/wallpapers-personalizados-minecraft-ztzs1" target="_blank" class="link-card" onclick="trackClick('mc_wallpapers')">
 <div class="link-icon"><i class="fas fa-image"></i></div>
 <div class="link-content">
 <div class="link-title">WALLPAPERS MINECRAFT</div>
@@ -305,25 +305,39 @@ document.addEventListener('mousemove',(e)=>{const mouseX=e.clientX/window.innerW
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+import { getDatabase, ref, update, increment } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyBITngbQd7w1bHpjMIBDiNeEfxdzatxJJ8",
+apiKey: "AIzaSyAvxshS3eYM2PWfKASHvmdobz3cLcYz8vk",
 authDomain: "bio-lp-7.firebaseapp.com",
 projectId: "bio-lp-7",
 storageBucket: "bio-lp-7.firebasestorage.app",
 messagingSenderId: "936067121939",
 appId: "1:936067121939:web:40ca8485717363cad350e6",
-measurementId: "G-0L5L04Y19T"
+measurementId: "G-0L5L04Y19T",
+databaseURL: "https://bio-lp-7-default-rtdb.firebaseio.com"
 };
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const db = getDatabase(app);
 
-window.trackClick = function(nomeBotao) {
-logEvent(analytics, 'clique_download', {
-item_id: nomeBotao,
-item_name: nomeBotao
+window.trackClick = function(idBotao) {
+logEvent(analytics, 'clique_download', { item_id: idBotao, item_name: idBotao });
+const hoje = new Date().toISOString().split('T')[0];
+const trava = 'clicou_' + idBotao + '_' + hoje;
+
+if (!localStorage.getItem(trava)) {
+const updates = {};
+updates['stats/' + idBotao] = increment(1);
+updates['stats_daily/' + hoje + '/' + idBotao] = increment(1);
+
+update(ref(db), updates).then(() => {
+localStorage.setItem(trava, 'true');
+}).catch((error) => {
+console.error(error);
 });
+}
 };
 </script>
 </body>
