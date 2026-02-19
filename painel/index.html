@@ -21,8 +21,11 @@ body{font-family:'Rajdhani',sans-serif;background:#050505;min-height:100vh;overf
 @keyframes float2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-80px,-30px) scale(1.2);}}
 #particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
 .container{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:1.5rem 1rem;}
-.nav-back{display:inline-flex;align-items:center;padding:0.6rem 1.2rem;background:rgba(20,20,20,0.6);backdrop-filter:blur(10px);border:1px solid rgba(220,38,38,0.3);border-radius:10px;color:#fff;text-decoration:none;font-family:'Orbitron',sans-serif;font-size:0.8rem;transition:all 0.4s ease;margin-bottom:1.5rem;}
-.nav-back:hover{background:#dc2626;border-color:#dc2626;transform:translateX(-5px);}
+.top-nav{display:flex;justify-content:space-between;width:100%;margin-bottom:1.5rem;gap:1rem;}
+.nav-btn{display:inline-flex;align-items:center;justify-content:center;padding:0.6rem 1.2rem;background:rgba(20,20,20,0.6);backdrop-filter:blur(10px);border:1px solid rgba(220,38,38,0.3);border-radius:10px;color:#fff;text-decoration:none;font-family:'Orbitron',sans-serif;font-size:0.8rem;transition:all 0.4s ease;cursor:pointer;}
+.nav-btn:hover{background:#dc2626;border-color:#dc2626;}
+.nav-btn.btn-right{border-color:rgba(34,197,94,0.4);}
+.nav-btn.btn-right:hover{background:rgba(34,197,94,0.2);border-color:#22c55e;}
 .profile{text-align:center;margin-bottom:1.5rem;animation:fadeInDown 1s ease-out;}
 .avatar-container{position:relative;display:inline-block;margin-bottom:0.8rem;}
 .avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid transparent;background:linear-gradient(#050505,#050505) padding-box,linear-gradient(135deg,#dc2626,#7f1d1d,#dc2626) border-box;box-shadow:0 0 30px rgba(220,38,38,0.5);animation:avatarGlow 3s infinite;}
@@ -33,7 +36,7 @@ body{font-family:'Rajdhani',sans-serif;background:#050505;min-height:100vh;overf
 .time-filters{display:flex;justify-content:center;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
 .time-btn{background:rgba(20,20,20,0.6);border:1px solid rgba(220,38,38,0.2);padding:0.4rem 1rem;border-radius:8px;color:#888;font-size:0.75rem;font-family:'Orbitron',sans-serif;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(5px);}
 .time-btn.active{background:#dc2626;color:#fff;border-color:#dc2626;box-shadow:0 0 15px rgba(220,38,38,0.4);}
-.dashboard-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;}
+.dashboard-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;animation:fadeIn 0.5s ease-out;}
 .card{background:rgba(15,15,15,0.6);backdrop-filter:blur(15px);border:1px solid rgba(220,38,38,0.2);border-radius:16px;padding:1.2rem;position:relative;transition:transform 0.3s;}
 .col-12{grid-column:span 12;} .col-8{grid-column:span 8;} .col-4{grid-column:span 4;} .col-6{grid-column:span 6;}
 .card-title{font-size:0.7rem;color:#888;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.8rem;display:block;}
@@ -49,6 +52,7 @@ body{font-family:'Rajdhani',sans-serif;background:#050505;min-height:100vh;overf
 .chart-sub { height: 200px; }
 }
 @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.98);}to{opacity:1;transform:scale(1);}}
 ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:#050505;} ::-webkit-scrollbar-thumb{background:#dc2626;border-radius:3px;}
 </style>
 </head>
@@ -58,42 +62,47 @@ body{font-family:'Rajdhani',sans-serif;background:#050505;min-height:100vh;overf
 <div class="bg-glow glow-2"></div>
 <canvas id="particles"></canvas>
 <div class="container">
-<a href="https://bio.lp77.com.br" class="nav-back"><i class="fas fa-arrow-left" style="margin-right:8px;"></i> VOLTAR</a>
+<div class="top-nav">
+<a href="https://bio.lp77.com.br" class="nav-btn"><i class="fas fa-arrow-left" style="margin-right:8px;"></i> VOLTAR</a>
+<button id="toggleViewBtn" class="nav-btn btn-right"><i class="fas fa-download" style="margin-right:8px; color:#dc2626;"></i> LINKS</button>
+</div>
+
 <div class="profile">
 <div class="avatar-container"><img src="https://share.creavite.co/6995277ce4a21b3f8b0008cf.gif" alt="LP" class="avatar"></div>
 <h1 class="username">LP</h1>
-<p class="tagline">Analytics Core</p>
+<p class="tagline" id="page-subtitle">Downloads Core</p>
 </div>
+
 <div class="time-filters">
 <button class="time-btn" onclick="alert('Coletando histórico... Disponível em breve!')">7 DIAS</button>
 <button class="time-btn" onclick="alert('Coletando histórico... Disponível em breve!')">30 DIAS</button>
 <button class="time-btn active">TODO O TEMPO</button>
 </div>
-<div class="dashboard-grid">
+
+<div class="dashboard-grid" id="view-downloads">
 <div class="card col-12" style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:1.5rem;">
-<div class="stat-mini"><span class="card-title" style="margin:0;">Cliques Totais</span><span class="stat-value" id="val-total" style="color:#dc2626;">0</span></div>
-<div class="stat-mini"><span class="card-title" style="margin:0;">Categoria Viral</span><span class="stat-value" id="top-project" style="font-size:1.5rem;margin-top:4px;">--</span></div>
+<div class="stat-mini"><span class="card-title" style="margin:0;">Downloads Totais</span><span class="stat-value" id="val-total-dl" style="color:#dc2626;">0</span></div>
+<div class="stat-mini"><span class="card-title" style="margin:0;">Categoria Viral</span><span class="stat-value" id="top-project-dl" style="font-size:1.5rem;margin-top:4px;">--</span></div>
 <div class="stat-mini"><span class="card-title" style="margin:0;">Status</span><span class="stat-value" style="font-size:1.2rem;color:#22c55e;margin-top:8px;"><i class="fas fa-link" style="margin-right:5px;"></i> ONLINE</span></div>
 </div>
-
-<div class="card col-8">
-<span class="card-title">Panorama Geral (Macrocategorias)</span>
-<div class="chart-main"><canvas id="mainChart"></canvas></div>
-</div>
-<div class="card col-4">
-<span class="card-title">Distribuição de Tráfego</span>
-<div class="chart-pie"><canvas id="pieChart"></canvas></div>
+<div class="card col-8"><span class="card-title">Panorama de Downloads</span><div class="chart-main"><canvas id="dlMainChart"></canvas></div></div>
+<div class="card col-4"><span class="card-title">Distribuição de Arquivos</span><div class="chart-pie"><canvas id="dlPieChart"></canvas></div></div>
+<div class="card col-6"><span class="card-title">Universo Minecraft</span><div class="chart-sub"><canvas id="dlMcChart"></canvas></div></div>
+<div class="card col-6"><span class="card-title">Jogos AAA & Ferramentas</span><div class="chart-sub"><canvas id="dlToolsChart"></canvas></div></div>
 </div>
 
-<div class="card col-6">
-<span class="card-title">Universo Minecraft</span>
-<div class="chart-sub"><canvas id="mcChart"></canvas></div>
+<div class="dashboard-grid" id="view-bio" style="display:none;">
+<div class="card col-12" style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:1.5rem; border-color:rgba(34,197,94,0.3);">
+<div class="stat-mini"><span class="card-title" style="margin:0;">Cliques na Bio</span><span class="stat-value" id="val-total-bio" style="color:#22c55e; text-shadow:0 0 15px rgba(34,197,94,0.3);">0</span></div>
+<div class="stat-mini"><span class="card-title" style="margin:0;">Link Mais Acessado</span><span class="stat-value" id="top-project-bio" style="font-size:1.5rem;margin-top:4px;">--</span></div>
+<div class="stat-mini"><span class="card-title" style="margin:0;">Status</span><span class="stat-value" style="font-size:1.2rem;color:#22c55e;margin-top:8px;"><i class="fas fa-link" style="margin-right:5px;"></i> ONLINE</span></div>
 </div>
-<div class="card col-6">
-<span class="card-title">Jogos AAA & Ferramentas</span>
-<div class="chart-sub"><canvas id="toolsChart"></canvas></div>
+<div class="card col-8" style="border-color:rgba(34,197,94,0.15);"><span class="card-title">Panorama de Redes Sociais</span><div class="chart-main"><canvas id="bioMainChart"></canvas></div></div>
+<div class="card col-4" style="border-color:rgba(34,197,94,0.15);"><span class="card-title">Distribuição de Cliques</span><div class="chart-pie"><canvas id="bioPieChart"></canvas></div></div>
+<div class="card col-6" style="border-color:rgba(34,197,94,0.15);"><span class="card-title">Redes & Navegação</span><div class="chart-sub"><canvas id="bioSocialChart"></canvas></div></div>
+<div class="card col-6" style="border-color:rgba(34,197,94,0.15);"><span class="card-title">Ecossistema Discord</span><div class="chart-sub"><canvas id="bioDiscordChart"></canvas></div></div>
 </div>
-</div>
+
 </div>
 
 <script>
@@ -103,6 +112,32 @@ class Particle{constructor(){this.x=Math.random()*width;this.y=Math.random()*hei
 function initParticles(){particles=[];for(let i=0;i<40;i++){particles.push(new Particle());}}
 function animate(){ctx.clearRect(0,0,width,height);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);}
 window.addEventListener('resize',()=>{resize();initParticles();});resize();initParticles();animate();
+
+let currentView = 1;
+const btnToggle = document.getElementById('toggleViewBtn');
+const viewDownloads = document.getElementById('view-downloads');
+const viewBio = document.getElementById('view-bio');
+const pageSubtitle = document.getElementById('page-subtitle');
+
+btnToggle.addEventListener('click', () => {
+if(currentView === 1) {
+viewDownloads.style.display = 'none';
+viewBio.style.display = 'grid';
+btnToggle.innerHTML = '<i class="fas fa-home" style="margin-right:8px; color:#22c55e;"></i> BIO';
+btnToggle.style.borderColor = 'rgba(220, 38, 38, 0.4)';
+pageSubtitle.innerText = 'Bio Analytics';
+pageSubtitle.style.color = '#22c55e';
+currentView = 2;
+} else {
+viewDownloads.style.display = 'grid';
+viewBio.style.display = 'none';
+btnToggle.innerHTML = '<i class="fas fa-download" style="margin-right:8px; color:#dc2626;"></i> LINKS';
+btnToggle.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+pageSubtitle.innerText = 'Downloads Core';
+pageSubtitle.style.color = '#dc2626';
+currentView = 1;
+}
+});
 </script>
 
 <script type="module">
@@ -117,63 +152,44 @@ projectId: "bio-lp-7",
 storageBucket: "bio-lp-7.firebasestorage.app",
 databaseURL: "https://bio-lp-7-default-rtdb.firebaseio.com"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 Chart.defaults.color = '#777';
 Chart.defaults.font.family = 'Rajdhani';
 
-const mainCtx = document.getElementById('mainChart').getContext('2d');
-let mainChart = new Chart(mainCtx, {
-type: 'bar',
-data: { labels: ['Pojav & Shaders', 'Mod de Armas 3D', 'Terror/Wall', 'Jogos AAA', 'Utilidades'], datasets: [{ data: [0,0,0,0,0], backgroundColor: '#dc2626', borderRadius: 4 }] },
-options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, formatter: (v) => v > 0 ? v : '' } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false } }, x: { grid: { display: false }, border: { display: false } } } }
-});
+const dlMainCtx = document.getElementById('dlMainChart').getContext('2d');
+let dlMainChart = new Chart(dlMainCtx, { type: 'bar', data: { labels: ['Pojav & Shaders', 'Mod de Armas 3D', 'Terror/Wall', 'Jogos AAA', 'Utilidades'], datasets: [{ data: [0,0,0,0,0], backgroundColor: '#dc2626', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, formatter: (v) => v > 0 ? v : '' } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false } }, x: { grid: { display: false }, border: { display: false } } } } });
 
-const pieCtx = document.getElementById('pieChart').getContext('2d');
-let pieChart = new Chart(pieCtx, {
-type: 'doughnut',
-data: { labels: ['Minecraft', 'Jogos AAA', 'Utilidades'], datasets: [{ data: [0,0,0], backgroundColor: ['#dc2626', '#991b1b', '#450a0a'], borderWidth: 2, borderColor: '#0a0a0a' }] },
-options: { responsive: true, maintainAspectRatio: false, cutout: '60%', layout: { padding: 10 }, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { family: 'Rajdhani', size: 12, weight: 'bold' }, formatter: (value, ctx) => { let label = ctx.chart.data.labels[ctx.dataIndex]; return value > 0 ? label + '\n' + value : ''; }, textAlign: 'center' } } }
-});
+const dlPieCtx = document.getElementById('dlPieChart').getContext('2d');
+let dlPieChart = new Chart(dlPieCtx, { type: 'doughnut', data: { labels: ['Minecraft', 'Jogos AAA', 'Utilidades'], datasets: [{ data: [0,0,0], backgroundColor: ['#dc2626', '#991b1b', '#450a0a'], borderWidth: 2, borderColor: '#0a0a0a' }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '60%', layout: { padding: 10 }, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { family: 'Rajdhani', size: 12, weight: 'bold' }, formatter: (value, ctx) => { let label = ctx.chart.data.labels[ctx.dataIndex]; return value > 0 ? label + '\n' + value : ''; }, textAlign: 'center' } } } });
 
-const mcCtx = document.getElementById('mcChart').getContext('2d');
-let mcChart = new Chart(mcCtx, { 
-type: 'bar', 
-data: { labels: ['Pojav APK', 'Shaders', 'Armas Bedr.', 'Armas Java', 'Mine de Terror', 'Wallpapers'], datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#dc2626', borderRadius: 3, barThickness: 12 }] }, 
-options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 30 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '' } }, scales: { x: { display: false }, y: { grid: { display: false }, border: { display: false } } } } 
-});
+const dlMcCtx = document.getElementById('dlMcChart').getContext('2d');
+let dlMcChart = new Chart(dlMcCtx, { type: 'bar', data: { labels: ['Pojav APK', 'Shaders', 'Armas Bedr.', 'Armas Java', 'Mine de Terror', 'Wallpapers'], datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#dc2626', borderRadius: 3, barThickness: 12 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 30 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '' } }, scales: { x: { display: false }, y: { grid: { display: false }, border: { display: false } } } } });
 
-const toolsCtx = document.getElementById('toolsChart').getContext('2d');
-let toolsChart = new Chart(toolsCtx, { 
-type: 'bar', 
-data: { labels: ['GTA V', 'Forza Horizon 5', 'Pack de Edição', 'Photoshop', 'MassDM', 'App de Filmes'], datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#991b1b', borderRadius: 3, barThickness: 12 }] }, 
-options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 30 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '' } }, scales: { x: { display: false }, y: { grid: { display: false }, border: { display: false } } } } 
-});
+const dlToolsCtx = document.getElementById('dlToolsChart').getContext('2d');
+let dlToolsChart = new Chart(dlToolsCtx, { type: 'bar', data: { labels: ['GTA V', 'Forza Horizon 5', 'Pack de Edição', 'Photoshop', 'MassDM', 'App de Filmes'], datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#991b1b', borderRadius: 3, barThickness: 12 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 30 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '' } }, scales: { x: { display: false }, y: { grid: { display: false }, border: { display: false } } } } });
+
+const bioMainCtx = document.getElementById('bioMainChart').getContext('2d');
+let bioMainChart = new Chart(bioMainCtx, { type: 'bar', data: { labels: ['Redes Sociais', 'Sistema & Naveg.', 'Comunidade Discord'], datasets: [{ data: [0,0,0], backgroundColor: '#22c55e', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, formatter: (v) => v > 0 ? v : '' } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false } }, x: { grid: { display: false }, border: { display: false } } } } });
+
+const bioPieCtx = document.getElementById('bioPieChart').getContext('2d');
+let bioPieChart = new Chart(bioPieCtx, { type: 'doughnut', data: { labels: ['Sociais', 'Sistema', 'Discord'], datasets: [{ data: [0,0,0], backgroundColor: ['#22c55e', '#16a34a', '#15803d'], borderWidth: 2, borderColor: '#0a0a0a' }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '60%', layout: { padding: 10 }, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { family: 'Rajdhani', size: 12, weight: 'bold' }, formatter: (value, ctx) => { let label = ctx.chart.data.labels[ctx.dataIndex]; return value > 0 ? label + '\n' + value : ''; }, textAlign: 'center' } } } });
+
+const bioSocialCtx = document.getElementById('bioSocialChart').getContext('2d');
+let bioSocialChart = new Chart(bioSocialCtx, { type: 'bar', data: { labels: ['YouTube', 'TikTok', 'Roblox', 'Guns.lol', 'Pág. Arquivos', 'Pág. Analytics'], datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#22c55e', borderRadius: 3, barThickness: 12 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 30 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '' } }, scales: { x: { display: false }, y: { grid: { display: false }, border: { display: false } } } } });
+
+const bioDiscordCtx = document.getElementById('bioDiscordChart').getContext('2d');
+let bioDiscordChart = new Chart(bioDiscordCtx, { type: 'bar', data: { labels: ['Contato DM', 'Servidor Notifier', 'Central LP', 'B0T.EXE'], datasets: [{ data: [0,0,0,0], backgroundColor: '#15803d', borderRadius: 3, barThickness: 12 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 30 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '' } }, scales: { x: { display: false }, y: { grid: { display: false }, border: { display: false } } } } });
 
 onValue(ref(db, 'stats'), (snapshot) => {
 const data = snapshot.val() || {};
-const total = Object.values(data).reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0);
-document.getElementById('val-total').innerText = total.toLocaleString();
 
-let poj_shader = data.pojav_shader || 0;
-let poj_apk = data.pojav_apk || 0;
-let poj_cmpack = data.pojav_cmpack || 0;
-let poj_bonus = data.pojav_bonus || 0;
-
-let arm_j = data.armas_java || 0;
-let arm_b = data.armas_bedrock || 0;
-let terror = data.mc_terror || 0;
-let wall = data.mc_wallpapers || 0;
-
-let gta = (data.gta_launcher || 0) + (data.gta_torrent || 0);
-let forza = (data.forza_launcher || 0) + (data.forza_torrent || 0);
-
-let ed_pack = data.pack_edicao || 0;
-let ed_apk = data.photoshop_apk || 0;
-let massdm = data.bot_massdm || 0;
-let filmes = data.app_filmes || 0;
+let poj_shader = data.pojav_shader || 0; let poj_apk = data.pojav_apk || 0; let poj_cmpack = data.pojav_cmpack || 0; let poj_bonus = data.pojav_bonus || 0;
+let arm_j = data.armas_java || 0; let arm_b = data.armas_bedrock || 0;
+let terror = data.mc_terror || 0; let wall = data.mc_wallpapers || 0;
+let gta = (data.gta_launcher || 0) + (data.gta_torrent || 0); let forza = (data.forza_launcher || 0) + (data.forza_torrent || 0);
+let ed_pack = data.pack_edicao || 0; let ed_apk = data.photoshop_apk || 0; let massdm = data.bot_massdm || 0; let filmes = data.app_filmes || 0;
 
 let poj_total = poj_shader + poj_apk + poj_cmpack + poj_bonus;
 let arm_total = arm_j + arm_b;
@@ -181,21 +197,35 @@ let mc_outros = terror + wall;
 let jogos_aaa = gta + forza;
 let utilidades = ed_pack + ed_apk + massdm + filmes;
 
-mainChart.data.datasets[0].data = [poj_total, arm_total, mc_outros, jogos_aaa, utilidades]; 
-mainChart.update();
+dlMainChart.data.datasets[0].data = [poj_total, arm_total, mc_outros, jogos_aaa, utilidades]; dlMainChart.update();
+dlPieChart.data.datasets[0].data = [poj_total + arm_total + mc_outros, jogos_aaa, utilidades]; dlPieChart.update();
+dlMcChart.data.datasets[0].data = [poj_apk, poj_shader, arm_b, arm_j, terror, wall]; dlMcChart.update();
+dlToolsChart.data.datasets[0].data = [gta, forza, ed_pack, ed_apk, massdm, filmes]; dlToolsChart.update();
 
-pieChart.data.datasets[0].data = [poj_total + arm_total + mc_outros, jogos_aaa, utilidades]; 
-pieChart.update();
+const macroLabelsDl = ['Pojav & Shaders', 'Mod de Armas 3D', 'Terror/Wall', 'Jogos AAA', 'Utilidades'];
+const macroDataDl = [poj_total, arm_total, terror, jogos_aaa, utilidades];
+const totalDl = poj_total + arm_total + mc_outros + jogos_aaa + utilidades;
+document.getElementById('val-total-dl').innerText = totalDl.toLocaleString();
+document.getElementById('top-project-dl').innerText = macroLabelsDl[macroDataDl.indexOf(Math.max(...macroDataDl))] || '--';
 
-mcChart.data.datasets[0].data = [poj_apk, poj_shader, arm_b, arm_j, terror, wall]; 
-mcChart.update();
+let yt = data.youtube || 0; let tk = data.tiktok || 0; let rbx = data.roblox || 0; let guns = data.guns_lol || 0;
+let arq = data.arquivos_bio || 0; let pan = data.ver_analytics || 0;
+let dm = data.discord_dm || 0; let notif = data.discord_notifier || 0; let cent = data.discord_central || 0; let bot = data.discord_bot_exe || 0;
 
-toolsChart.data.datasets[0].data = [gta, forza, ed_pack, ed_apk, massdm, filmes]; 
-toolsChart.update();
+let social = yt + tk + rbx + guns;
+let sistema = arq + pan;
+let discord = dm + notif + cent + bot;
 
-const macroLabels = ['Pojav & Shaders', 'Mod de Armas 3D', 'Terror/Wall', 'Jogos AAA', 'Utilidades'];
-const macroData = [poj_total, arm_total, terror, jogos_aaa, utilidades];
-document.getElementById('top-project').innerText = macroLabels[macroData.indexOf(Math.max(...macroData))] || '--';
+bioMainChart.data.datasets[0].data = [social, sistema, discord]; bioMainChart.update();
+bioPieChart.data.datasets[0].data = [social, sistema, discord]; bioPieChart.update();
+bioSocialChart.data.datasets[0].data = [yt, tk, rbx, guns, arq, pan]; bioSocialChart.update();
+bioDiscordChart.data.datasets[0].data = [dm, notif, cent, bot]; bioDiscordChart.update();
+
+const macroLabelsBio = ['Redes Sociais', 'Acesso ao Sistema', 'Comunidade Discord'];
+const macroDataBio = [social, sistema, discord];
+const totalBio = social + sistema + discord;
+document.getElementById('val-total-bio').innerText = totalBio.toLocaleString();
+document.getElementById('top-project-bio').innerText = macroLabelsBio[macroDataBio.indexOf(Math.max(...macroDataBio))] || '--';
 });
 </script>
 </body>
