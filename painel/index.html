@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics</title>
+<link rel="icon" type="image/gif" href="https://share.creavite.co/6995277ce4a21b3f8b0008cf.gif">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Rajdhani',sans-serif;background:#050505;min-height:100vh;overflow-x:hidden;position:relative;color:#fff;}
+.bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;background-image:linear-gradient(rgba(220,38,38,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(220,38,38,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
+.bg-glow{position:fixed;width:600px;height:600px;border-radius:50%;filter:blur(150px);opacity:0.4;pointer-events:none;z-index:0;}
+.glow-1{top:-200px;left:-200px;background:radial-gradient(circle,#dc2626 0%,transparent 70%);animation:float1 15s ease-in-out infinite;}
+.glow-2{bottom:-200px;right:-200px;background:radial-gradient(circle,#991b1b 0%,transparent 70%);animation:float2 18s ease-in-out infinite;}
+@keyframes float1{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(100px,50px) scale(1.1);}}
+@keyframes float2{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-80px,-30px) scale(1.2);}}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+.container{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:1.5rem 1rem;}
+.nav-back{display:inline-flex;align-items:center;padding:0.6rem 1.2rem;background:rgba(20,20,20,0.6);backdrop-filter:blur(10px);border:1px solid rgba(220,38,38,0.3);border-radius:10px;color:#fff;text-decoration:none;font-family:'Orbitron',sans-serif;font-size:0.8rem;transition:all 0.4s ease;margin-bottom:1.5rem;}
+.nav-back:hover{background:#dc2626;border-color:#dc2626;transform:translateX(-5px);}
+.profile{text-align:center;margin-bottom:1.5rem;animation:fadeInDown 1s ease-out;}
+.avatar-container{position:relative;display:inline-block;margin-bottom:0.8rem;}
+.avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid transparent;background:linear-gradient(#050505,#050505) padding-box,linear-gradient(135deg,#dc2626,#7f1d1d,#dc2626) border-box;box-shadow:0 0 30px rgba(220,38,38,0.5);animation:avatarGlow 3s infinite;}
+@keyframes avatarGlow{0%,100%{box-shadow:0 0 20px rgba(220,38,38,0.4);}50%{box-shadow:0 0 40px rgba(220,38,38,0.7);}}
+.username{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:700;background:linear-gradient(135deg,#fff 0%,#dc2626 50%,#fff 100%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:3px;}
+@keyframes shine{to{background-position:200% center;}}
+.tagline{color:#dc2626;font-size:0.8rem;letter-spacing:3px;text-transform:uppercase;margin-top:0.2rem;}
+.time-filters{display:flex;justify-content:center;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.time-btn{background:rgba(20,20,20,0.6);border:1px solid rgba(220,38,38,0.2);padding:0.4rem 1rem;border-radius:8px;color:#888;font-size:0.75rem;font-family:'Orbitron',sans-serif;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(5px);}
+.time-btn.active{background:#dc2626;color:#fff;border-color:#dc2626;box-shadow:0 0 15px rgba(220,38,38,0.4);}
+.dashboard-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem;}
+.card{background:rgba(15,15,15,0.6);backdrop-filter:blur(15px);border:1px solid rgba(220,38,38,0.2);border-radius:16px;padding:1.2rem;position:relative;transition:transform 0.3s;}
+.col-12{grid-column:span 12;} .col-8{grid-column:span 8;} .col-4{grid-column:span 4;} .col-6{grid-column:span 6;}
+.card-title{font-size:0.7rem;color:#888;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.8rem;display:block;}
+.stat-mini{display:flex;flex-direction:column;align-items:center;gap:0.1rem;}
+.stat-value{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:700;color:#fff;text-shadow:0 0 15px rgba(220,38,38,0.3);}
+.chart-main { height: 260px; }
+.chart-pie { height: 240px; }
+.chart-sub { height: 220px; }
+@media (max-width:768px){
+.col-8,.col-4,.col-6{grid-column:span 12;}
+.chart-main { height: 220px; }
+.chart-pie { height: 230px; }
+.chart-sub { height: 200px; }
+}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-track{background:#050505;} ::-webkit-scrollbar-thumb{background:#dc2626;border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow glow-1"></div>
+<div class="bg-glow glow-2"></div>
+<canvas id="particles"></canvas>
+<div class="container">
+<a href="https://bio.lp77.com.br" class="nav-back"><i class="fas fa-arrow-left" style="margin-right:8px;"></i> VOLTAR</a>
+<div class="profile">
+<div class="avatar-container"><img src="https://share.creavite.co/6995277ce4a21b3f8b0008cf.gif" alt="LP" class="avatar"></div>
+<h1 class="username">LP</h1>
+<p class="tagline">Analytics Core</p>
+</div>
+<div class="time-filters">
+<button class="time-btn" onclick="alert('Coletando histórico... Disponível em breve!')">7 DIAS</button>
+<button class="time-btn" onclick="alert('Coletando histórico... Disponível em breve!')">30 DIAS</button>
+<button class="time-btn active">TODO O TEMPO</button>
+</div>
+<div class="dashboard-grid">
+<div class="card col-12" style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:1.5rem;">
+<div class="stat-mini"><span class="card-title" style="margin:0;">Cliques Totais</span><span class="stat-value" id="val-total" style="color:#dc2626;">0</span></div>
+<div class="stat-mini"><span class="card-title" style="margin:0;">Categoria Viral</span><span class="stat-value" id="top-project" style="font-size:1.5rem;margin-top:4px;">--</span></div>
+<div class="stat-mini"><span class="card-title" style="margin:0;">Status</span><span class="stat-value" style="font-size:1.2rem;color:#22c55e;margin-top:8px;"><i class="fas fa-link" style="margin-right:5px;"></i> ONLINE</span></div>
+</div>
+
+<div class="card col-8">
+<span class="card-title">Panorama Geral (Macrocategorias)</span>
+<div class="chart-main"><canvas id="mainChart"></canvas></div>
+</div>
+<div class="card col-4">
+<span class="card-title">Distribuição de Tráfego</span>
+<div class="chart-pie"><canvas id="pieChart"></canvas></div>
+</div>
+
+<div class="card col-6">
+<span class="card-title">Universo Minecraft</span>
+<div class="chart-sub"><canvas id="mcChart"></canvas></div>
+</div>
+<div class="card col-6">
+<span class="card-title">Jogos AAA & Ferramentas</span>
+<div class="chart-sub"><canvas id="toolsChart"></canvas></div>
+</div>
+</div>
+</div>
+
+<script>
+const canvas=document.getElementById('particles');const ctx=canvas.getContext('2d');let width,height;let particles=[];
+function resize(){width=canvas.width=window.innerWidth;height=canvas.height=window.innerHeight;}
+class Particle{constructor(){this.x=Math.random()*width;this.y=Math.random()*height;this.vx=(Math.random()-0.5)*0.5;this.vy=(Math.random()-0.5)*0.5;this.radius=Math.random()*2+1;this.alpha=Math.random()*0.5+0.1;}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>width)this.vx*=-1;if(this.y<0||this.y>height)this.vy*=-1;}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);ctx.fillStyle=`rgba(220,38,38,${this.alpha})`;ctx.fill();}}
+function initParticles(){particles=[];for(let i=0;i<40;i++){particles.push(new Particle());}}
+function animate(){ctx.clearRect(0,0,width,height);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);}
+window.addEventListener('resize',()=>{resize();initParticles();});resize();initParticles();animate();
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+Chart.register(ChartDataLabels);
+
+const firebaseConfig = {
+apiKey: "AIzaSyAvxshS3eYM2PWfKASHvmdobz3cLcYz8vk",
+authDomain: "bio-lp-7.firebaseapp.com",
+projectId: "bio-lp-7",
+storageBucket: "bio-lp-7.firebasestorage.app",
+databaseURL: "https://bio-lp-7-default-rtdb.firebaseio.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+Chart.defaults.color = '#777';
+Chart.defaults.font.family = 'Rajdhani';
+
+const mainCtx = document.getElementById('mainChart').getContext('2d');
+let mainChart = new Chart(mainCtx, {
+type: 'bar',
+data: { labels: ['Pojav & Shaders', 'Mod de Armas 3D', 'Terror/Wall', 'Jogos AAA', 'Utilidades'], datasets: [{ data: [0,0,0,0,0], backgroundColor: '#dc2626', borderRadius: 4 }] },
+options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'top', font: { weight: 'bold', size: 10 }, formatter: (v) => v > 0 ? v : '' } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false } }, x: { grid: { display: false }, border: { display: false } } } }
+});
+
+const pieCtx = document.getElementById('pieChart').getContext('2d');
+let pieChart = new Chart(pieCtx, {
+type: 'doughnut',
+data: { labels: ['Minecraft', 'Jogos AAA', 'Utilidades'], datasets: [{ data: [0,0,0], backgroundColor: ['#dc2626', '#991b1b', '#450a0a'], borderWidth: 2, borderColor: '#0a0a0a' }] },
+options: { responsive: true, maintainAspectRatio: false, cutout: '60%', layout: { padding: 10 }, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { family: 'Rajdhani', size: 12, weight: 'bold' }, formatter: (value, ctx) => { let label = ctx.chart.data.labels[ctx.dataIndex]; return value > 0 ? label + '\n' + value : ''; }, textAlign: 'center' } } }
+});
+
+const mcCtx = document.getElementById('mcChart').getContext('2d');
+let mcChart = new Chart(mcCtx, { 
+type: 'bar', 
+data: { labels: ['Pojav APK', 'Shaders', 'Armas Bedr.', 'Armas Java', 'Mine de Terror', 'Wallpapers'], datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#dc2626', borderRadius: 3, barThickness: 12 }] }, 
+options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 30 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '' } }, scales: { x: { display: false }, y: { grid: { display: false }, border: { display: false } } } } 
+});
+
+const toolsCtx = document.getElementById('toolsChart').getContext('2d');
+let toolsChart = new Chart(toolsCtx, { 
+type: 'bar', 
+data: { labels: ['GTA V', 'Forza Horizon 5', 'Pack de Edição', 'Photoshop', 'MassDM', 'App de Filmes'], datasets: [{ data: [0,0,0,0,0,0], backgroundColor: '#991b1b', borderRadius: 3, barThickness: 12 }] }, 
+options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, layout: { padding: { right: 30 } }, plugins: { legend: { display: false }, datalabels: { display: true, color: '#fff', anchor: 'end', align: 'right', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '' } }, scales: { x: { display: false }, y: { grid: { display: false }, border: { display: false } } } } 
+});
+
+onValue(ref(db, 'stats'), (snapshot) => {
+const data = snapshot.val() || {};
+const total = Object.values(data).reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0);
+document.getElementById('val-total').innerText = total.toLocaleString();
+
+let poj_shader = data.pojav_shader || 0;
+let poj_apk = data.pojav_apk || 0;
+let poj_cmpack = data.pojav_cmpack || 0;
+let poj_bonus = data.pojav_bonus || 0;
+
+let arm_j = data.armas_java || 0;
+let arm_b = data.armas_bedrock || 0;
+let terror = data.mc_terror || 0;
+let wall = data.mc_wallpapers || 0;
+
+let gta = (data.gta_launcher || 0) + (data.gta_torrent || 0);
+let forza = (data.forza_launcher || 0) + (data.forza_torrent || 0);
+
+let ed_pack = data.pack_edicao || 0;
+let ed_apk = data.photoshop_apk || 0;
+let massdm = data.bot_massdm || 0;
+let filmes = data.app_filmes || 0;
+
+let poj_total = poj_shader + poj_apk + poj_cmpack + poj_bonus;
+let arm_total = arm_j + arm_b;
+let mc_outros = terror + wall;
+let jogos_aaa = gta + forza;
+let utilidades = ed_pack + ed_apk + massdm + filmes;
+
+mainChart.data.datasets[0].data = [poj_total, arm_total, mc_outros, jogos_aaa, utilidades]; 
+mainChart.update();
+
+pieChart.data.datasets[0].data = [poj_total + arm_total + mc_outros, jogos_aaa, utilidades]; 
+pieChart.update();
+
+mcChart.data.datasets[0].data = [poj_apk, poj_shader, arm_b, arm_j, terror, wall]; 
+mcChart.update();
+
+toolsChart.data.datasets[0].data = [gta, forza, ed_pack, ed_apk, massdm, filmes]; 
+toolsChart.update();
+
+const macroLabels = ['Pojav & Shaders', 'Mod de Armas 3D', 'Terror/Wall', 'Jogos AAA', 'Utilidades'];
+const macroData = [poj_total, arm_total, terror, jogos_aaa, utilidades];
+document.getElementById('top-project').innerText = macroLabels[macroData.indexOf(Math.max(...macroData))] || '--';
+});
+</script>
+</body>
+</html>
