@@ -437,7 +437,7 @@ function loopScreensaver() {
     let canvasMode = getActiveCanvasMode();
     
     let colorMain = getConfig('color', getDefaultColor(activeSS));
-    let colorBgAnim = getConfig('bgColor', getDefaultColor(canvasMode)); // Cor da animação traseira
+    let colorBgAnim = getConfig('bgColor', getDefaultColor(canvasMode));
 
     if (canvasMode === 'none') {
         ctx.fillStyle = getConfig('bg', '#000000'); ctx.fillRect(0, 0, w, h);
