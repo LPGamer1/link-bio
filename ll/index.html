@@ -215,8 +215,7 @@ input[type="color"] { width: 50px; height: 35px; padding: 0; cursor: pointer; bo
         
         <div class="footer-catalog-container">
             <div class="footer-links">
-                <a href="https://tool.lp77.com.br" class="footer-btn" target="_blank"><i class="fas fa-home"></i> Página Inicial</a>
-                <a href="https://bio.lp77.com.br" class="footer-btn" target="_blank"><i class="fas fa-user"></i> Sobre Mim</a>
+                <a href="https://bio.lp77.com.br" class="footer-btn" target="_blank"><i class="fas fa-home"></i> Página Inicial</a>
             </div>
             <div class="footer-catalog">MADE BY LP</div>
         </div>
@@ -714,6 +713,10 @@ window.addEventListener('keydown', (e) => {
     if (e.code === hotkeys.panic) { document.getElementById('panic-overlay').style.display = 'flex'; document.getElementById('fake-search').focus(); } 
     else if (e.code === hotkeys.back && document.getElementById('gui-layer').style.display === 'flex') { exitSystem(); } 
     else if (e.code === hotkeys.custom) { if(customUrl) window.open(customUrl, '_blank'); else alert('Configure a URL!'); }
+});
+</script>
+</body>
+</html>otkeys.custom) { if(customUrl) window.open(customUrl, '_blank'); else alert('Configure a URL!'); }
 });
 </script>
 </body>
