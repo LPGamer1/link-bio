@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Screen by LP</title>
+<link id="page-favicon" rel="icon" type="image/jpeg" href="https://wallpapers.com/images/featured/tela-preta-4k-aacgyrn3rmcsw8z9.jpg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; color: #fff; height: 100vh; width: 100vw; user-select: none; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 3px; }
+
+/* ================= SCREENSAVER LAYER ================= */
+#screensaver-layer { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    z-index: 10; transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1); 
+    background: #000; display: flex; justify-content: center; align-items: center;
+}
+#screensaver-layer.hidden { transform: scale(1.5); opacity: 0; pointer-events: none; filter: blur(10px); }
+
+#ss-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+/* Modelos DOM (Relógios) */
+#ss-clock { font-family: 'Orbitron', sans-serif; font-size: 8rem; font-weight: 700; z-index: 2; text-shadow: 0 0 30px rgba(0,0,0,0.8); display: none; pointer-events: none; letter-spacing: 5px; }
+@media (max-width: 768px) { #ss-clock { font-size: 4rem; } }
+
+#ss-flip { display: none; gap: 15px; z-index: 2; pointer-events: none; }
+.flip-card { background: rgba(15,15,15,0.9); font-family: 'Orbitron', sans-serif; font-size: 6rem; font-weight: 700; padding: 20px; border-radius: 15px; border: 2px solid rgba(255,255,255,0.1); position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.8); text-align: center; min-width: 120px; backdrop-filter: blur(10px); }
+.flip-card::after { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(0,0,0,0.8); transform: translateY(-50%); }
+@media (max-width: 768px) { .flip-card { font-size: 3.5rem; min-width: 80px; padding: 10px; } }
+
+#ss-analog { display: none; position: relative; width: 350px; height: 350px; border-radius: 50%; border: 4px dashed rgba(255,255,255,0.3); box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 50px rgba(0,0,0,0.8); z-index: 2; pointer-events: none; backdrop-filter: blur(5px); background: rgba(0,0,0,0.2); }
+.analog-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15px; height: 15px; background: #fff; border-radius: 50%; z-index: 10; box-shadow: 0 0 15px #fff; }
+.hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; }
+.hour-hand { width: 6px; height: 90px; background: rgba(255,255,255,0.9); z-index: 5; margin-left: -3px; }
+.minute-hand { width: 4px; height: 130px; z-index: 6; margin-left: -2px; }
+.second-hand { width: 2px; height: 150px; background: #ef4444; z-index: 7; margin-left: -1px; }
+
+/* Área de Clique Triplo (Canto Inferior Direito) - Cursor Migué (Seta normal) */
+#ss-click-area { 
+    position: absolute; bottom: 0; right: 0; width: 15vw; height: 15vw; 
+    min-width: 120px; min-height: 120px; max-width: 250px; max-height: 250px; 
+    z-index: 30; cursor: default; 
+}
+
+/* UI Controls (Rodapé) */
+#ss-ui-controls {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 15px; z-index: 20; transition: opacity 0.5s ease;
+}
+.ss-btn {
+    background: rgba(20,20,20,0.6); border: 1px solid rgba(255,255,255,0.1);
+    color: #999; width: 45px; height: 35px; border-radius: 10px;
+    font-size: 1.1rem; display: flex; justify-content: center; align-items: center;
+    cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px);
+}
+.ss-btn:hover { background: rgba(124, 58, 237, 0.5); color: #fff; border-color: #8b5cf6; }
+body.is-fullscreen #ss-ui-controls { opacity: 0; pointer-events: none; }
+
+/* ================= GUI LAYER (Sistema Operacional) ================= */
+#gui-layer { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    z-index: 40; display: none; opacity: 0; flex-direction: column; align-items: center; 
+    padding: 2rem 1rem 5rem 1rem; transition: opacity 0.6s ease; overflow-y: auto; 
+    background: rgba(5,5,10,0.95); backdrop-filter: blur(20px);
+}
+#gui-layer.active { display: flex; opacity: 1; pointer-events: all; }
+
+.bg-grid { position: fixed; top:0; left:0; width:100%; height:100%; background-image: linear-gradient(rgba(124, 58, 237, 0.05) 1px,transparent 1px), linear-gradient(90deg,rgba(124, 58, 237, 0.05) 1px,transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: -2; }
+
+.sys-header { width: 100%; max-width: 900px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(124, 58, 237, 0.3); padding-bottom: 1rem; z-index: 5; flex-shrink: 0; }
+.sys-title { font-family: 'Orbitron'; font-size: 1.5rem; color: #a78bfa; letter-spacing: 3px; font-weight: 700; }
+.nav-btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(20,20,20,0.8); border: 1px solid rgba(124, 58, 237, 0.4); border-radius: 8px; color: #fff; font-family: 'Orbitron'; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
+.nav-btn:hover { background: rgba(124, 58, 237, 0.2); border-color: #8b5cf6; box-shadow: 0 0 15px rgba(124, 58, 237, 0.3); }
+
+.links-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 1rem; z-index: 5; }
+.link-card { position: relative; display: flex; align-items: center; padding: 1rem 1.2rem; background: rgba(15, 15, 20, 0.8); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 12px; text-decoration: none; color: #fff; cursor: pointer; transition: all 0.3s ease; }
+.link-card:hover { transform: translateX(5px); border-color: rgba(124, 58, 237, 0.6); box-shadow: 0 5px 20px rgba(124, 58, 237, 0.2); }
+.link-icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background: rgba(124, 58, 237, 0.1); border-radius: 10px; margin-right: 1rem; font-size: 1.2rem; color: #a78bfa; transition: 0.3s; }
+.link-card:hover .link-icon { background: #8b5cf6; color: #fff; transform: scale(1.1); }
+.link-content { flex: 1; text-align: left; }
+.link-title { font-family: 'Orbitron'; font-size: 1rem; font-weight: 600; letter-spacing: 1px; margin-bottom: 0.2rem; }
+.link-desc { font-size: 0.8rem; color: #888; }
+.link-arrow { color: #555; transition: 0.3s; }
+.link-card:hover .link-arrow { color: #a78bfa; transform: translateX(3px); }
+
+.dropdown-container { position: relative; width: 100%; }
+.dropdown-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
+.dropdown-menu.active { max-height: 600px; opacity: 1; margin-top: 0.5rem; }
+.dropdown-item { display: flex; align-items: center; padding: 0.8rem 1rem; margin-bottom: 0.4rem; background: rgba(25, 20, 35, 0.6); border: 1px solid rgba(124, 58, 237, 0.1); border-radius: 10px; text-decoration: none; color: #ddd; transition: 0.3s; margin-left: 2rem; }
+.dropdown-item:hover { background: rgba(124, 58, 237, 0.15); border-color: #8b5cf6; transform: translateX(5px); color: #fff; }
+.dropdown-icon { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 6px; margin-right: 0.8rem; font-size: 0.9rem; color: #a78bfa; }
+.dropdown-item:hover .dropdown-icon { background: #8b5cf6; color: #fff; }
+.dropdown-text { flex: 1; font-family: 'Orbitron'; font-size: 0.85rem; font-weight: 500; letter-spacing: 1px; }
+.rotate-arrow { transition: transform 0.3s ease; }
+.rotate-arrow.active { transform: rotate(180deg); color: #a78bfa; }
+
+/* ================= MODALS ================= */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
+    z-index: 9999; display: none; justify-content: center; align-items: center;
+    opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+}
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+.box { background: rgba(10,10,15,0.9); border: 1px solid rgba(124, 58, 237, 0.4); border-radius: 15px; padding: 2rem; width: 90%; max-width: 450px; box-shadow: 0 0 40px rgba(124, 58, 237, 0.2); text-align: center; transform: translateY(20px); transition: transform 0.3s ease; }
+.modal-overlay.active .box { transform: translateY(0); }
+.box h2 { font-family: 'Orbitron'; color: #a78bfa; margin-bottom: 1.5rem; letter-spacing: 2px; display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem;}
+.close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; transition: 0.3s;}
+.close-btn:hover { color: #ef4444; transform: scale(1.2); }
+
+.input-field { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #4c1d95; color: #fff; padding: 12px; margin-bottom: 1rem; border-radius: 8px; font-family: 'Orbitron'; font-size: 1rem; text-align: center; outline: none; transition: 0.3s; }
+.input-field:focus { border-color: #a78bfa; box-shadow: 0 0 15px rgba(124, 58, 237, 0.4); }
+.btn-submit { width: 100%; background: linear-gradient(45deg, #6d28d9, #4338ca); border: none; padding: 12px; color: #fff; font-family: 'Orbitron'; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; letter-spacing: 2px; }
+.btn-submit:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(124, 58, 237, 0.5); }
+.error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 1rem; opacity: 0; transition: 0.3s; font-weight: bold;}
+
+/* Catálogo de Protetores (16 Opções) */
+#catalog-modal .box { max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative;}
+.catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px; }
+.catalog-item { background: rgba(20,20,25,0.8); border: 1px solid #333; border-radius: 10px; padding: 15px 5px; cursor: pointer; transition: 0.3s; color: #aaa; font-family: 'Orbitron'; font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.catalog-item i { font-size: 1.8rem; margin-bottom: 10px; color: #a78bfa; }
+.catalog-item:hover { border-color: #a78bfa; background: rgba(124, 58, 237, 0.1); color: #fff; transform: translateY(-3px); }
+.catalog-item.active { border-color: #8b5cf6; background: rgba(124, 58, 237, 0.3); color: #fff; box-shadow: 0 0 15px rgba(124, 58, 237, 0.4); }
+
+/* Rodapé do Catálogo com Botões Extras */
+.footer-catalog-container { margin-top: 20px; border-top: 1px solid #222; padding-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.footer-links { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+.footer-btn { background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); color: #a78bfa; font-family: 'Orbitron'; font-size: 0.8rem; padding: 8px 15px; border-radius: 8px; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+.footer-btn:hover { background: rgba(124, 58, 237, 0.3); color: #fff; border-color: #8b5cf6; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(124, 58, 237, 0.2); }
+.footer-catalog { font-family: 'Orbitron'; font-size: 0.8rem; color: #555; text-align: center; letter-spacing: 4px; }
+
+/* Configurações (Engrenagem) */
+.setting-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #222; text-align: left;}
+.setting-label { font-size: 0.9rem; font-family: 'Rajdhani'; color: #ddd; }
+.setting-input { background: #111; border: 1px solid #555; border-radius: 5px; color: #a78bfa; padding: 8px; outline: none; font-family: 'Rajdhani'; font-weight: 600; cursor: pointer;}
+input[type="color"] { width: 50px; height: 35px; padding: 0; cursor: pointer; border: none; background: transparent; }
+
+/* Hotkeys Modal */
+.hotkey-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #222; text-align: left; }
+.hotkey-label { font-size: 1rem; font-weight: 600; }
+.hotkey-desc { font-size: 0.8rem; color: #777; }
+.hotkey-input { background: #111; border: 1px solid #444; color: #a78bfa; padding: 8px 15px; border-radius: 5px; font-family: 'Orbitron'; cursor: pointer; min-width: 100px; text-align: center; transition: 0.3s;}
+.hotkey-input.recording { background: #8b5cf6; color: #fff; animation: pulse 1s infinite; }
+
+/* ================= FAKE GOOGLE ================= */
+#panic-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #202124; z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; font-family: Arial, sans-serif; }
+.google-nav { position: absolute; top: 15px; right: 20px; display: flex; gap: 15px; align-items: center; color: #e8eaed; font-size: 13px; }
+.google-logo { width: 272px; margin-bottom: 30px; filter: invert(1) brightness(0.9) contrast(1.2); }
+.google-search { width: 90%; max-width: 584px; display: flex; align-items: center; background: #202124; border: 1px solid #5f6368; border-radius: 24px; padding: 12px 20px; margin-bottom: 30px; }
+.google-search i { color: #9aa0a6; font-size: 1.2rem; margin-right: 15px; }
+.google-search input { flex: 1; background: transparent; border: none; outline: none; color: #e8eaed; font-size: 1rem; }
+.google-btns { display: flex; gap: 12px; }
+.google-btns button { background: #303134; color: #e8eaed; border: 1px solid #303134; padding: 10px 16px; border-radius: 4px; cursor: pointer; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+</style>
+</head>
+<body>
+
+<div id="screensaver-layer">
+    <canvas id="ss-canvas"></canvas>
+    
+    <div id="ss-clock">12:00</div>
+    
+    <div id="ss-flip">
+        <div class="flip-card" id="flip-h">12</div>
+        <div class="flip-card" id="flip-m">00</div>
+        <div class="flip-card" id="flip-s">00</div>
+    </div>
+
+    <div id="ss-analog">
+        <div class="analog-center"></div>
+        <div class="hand hour-hand" id="hand-h"></div>
+        <div class="hand minute-hand" id="hand-m"></div>
+        <div class="hand second-hand" id="hand-s"></div>
+    </div>
+    
+    <div id="ss-click-area" onclick="handleSecretClick()"></div>
+    
+    <div id="ss-ui-controls">
+        <button class="ss-btn" onclick="openCatalog()" title="Catálogo (16 Telas)"><i class="fas fa-chevron-up"></i></button>
+        <button class="ss-btn" onclick="openSSConfig()" title="Configurar Tema"><i class="fas fa-cog"></i></button>
+        <button class="ss-btn" onclick="toggleFullscreen()" title="Tela Cheia Pura"><i class="fas fa-expand"></i></button>
+    </div>
+</div>
+
+<div id="catalog-modal" class="modal-overlay">
+    <div class="box">
+        <h2>CATÁLOGO DE TELAS <button class="close-btn" onclick="closeCatalog()"><i class="fas fa-times"></i></button></h2>
+        <div class="catalog-grid">
+            <div class="catalog-item" id="cat-clock" onclick="setScreensaver('clock')"><i class="far fa-clock"></i> Relógio Digital</div>
+            <div class="catalog-item" id="cat-flip" onclick="setScreensaver('flip')"><i class="fas fa-stopwatch"></i> Relógio Flip</div>
+            <div class="catalog-item" id="cat-analog" onclick="setScreensaver('analog')"><i class="fas fa-compass"></i> Relógio Analógico</div>
+            <div class="catalog-item" id="cat-bounce" onclick="setScreensaver('bounce')"><i class="fas fa-tv"></i> DVD Bounce</div>
+            <div class="catalog-item" id="cat-matrix" onclick="setScreensaver('matrix')"><i class="fas fa-code"></i> Matrix Code</div>
+            <div class="catalog-item" id="cat-binary" onclick="setScreensaver('binary')"><i class="fas fa-microchip"></i> Dados Binários</div>
+            <div class="catalog-item" id="cat-network" onclick="setScreensaver('network')"><i class="fas fa-project-diagram"></i> Conexões</div>
+            <div class="catalog-item" id="cat-particles" onclick="setScreensaver('particles')"><i class="fas fa-atom"></i> Partículas Neon</div>
+            <div class="catalog-item" id="cat-stars" onclick="setScreensaver('stars')"><i class="fas fa-space-shuttle"></i> Hiperespaço</div>
+            <div class="catalog-item" id="cat-warp" onclick="setScreensaver('warp')"><i class="fas fa-fighter-jet"></i> Warp Speed</div>
+            <div class="catalog-item" id="cat-fireflies" onclick="setScreensaver('fireflies')"><i class="fas fa-bug"></i> Vagalumes</div>
+            <div class="catalog-item" id="cat-snow" onclick="setScreensaver('snow')"><i class="fas fa-snowflake"></i> Neve Leve</div>
+            <div class="catalog-item" id="cat-rain" onclick="setScreensaver('rain')"><i class="fas fa-cloud-showers-heavy"></i> Chuva Rápida</div>
+            <div class="catalog-item" id="cat-wave" onclick="setScreensaver('wave')"><i class="fas fa-water"></i> Ondas Sonoras</div>
+            <div class="catalog-item" id="cat-radar" onclick="setScreensaver('radar')"><i class="fas fa-broadcast-tower"></i> Radar Sonar</div>
+            <div class="catalog-item" id="cat-pulse" onclick="setScreensaver('pulse')"><i class="fas fa-bullseye"></i> Pulso Tech</div>
+        </div>
+        
+        <div class="footer-catalog-container">
+            <div class="footer-links">
+                <a href="https://tool.lp77.com.br" class="footer-btn" target="_blank"><i class="fas fa-home"></i> Página Inicial</a>
+                <a href="https://bio.lp77.com.br" class="footer-btn" target="_blank"><i class="fas fa-user"></i> Sobre Mim</a>
+            </div>
+            <div class="footer-catalog">MADE BY LP</div>
+        </div>
+    </div>
+</div>
+
+<div id="ss-config-modal" class="modal-overlay">
+    <div class="box">
+        <h2>AJUSTES DA TELA <button class="close-btn" onclick="closeSSConfig()"><i class="fas fa-times"></i></button></h2>
+        <div id="ss-config-content">
+            </div>
+        <button class="btn-submit" style="margin-top: 15px;" onclick="closeSSConfig(); initScreensaver();">SALVAR E APLICAR</button>
+    </div>
+</div>
+
+<div id="login-modal" class="modal-overlay">
+    <div class="box" style="max-width: 400px;">
+        <h2 style="justify-content: center;">AUTENTICAÇÃO</h2>
+        <input type="text" id="user-input" class="input-field" placeholder="Usuário" autocomplete="off">
+        <input type="password" id="pass-input" class="input-field" placeholder="Senha">
+        <button class="btn-submit" onclick="tryLogin()">ACESSAR SISTEMA</button>
+        <button style="margin-top: 15px; background: transparent; border: none; color: #888; cursor: pointer; font-family: 'Rajdhani';" onclick="closeLogin()">Cancelar</button>
+        <div id="login-error" class="error-msg">Acesso Negado</div>
+    </div>
+</div>
+
+<div id="hotkeys-modal" class="modal-overlay">
+    <div class="box" style="max-width: 500px;">
+        <h2><i class="fas fa-keyboard"></i> HOTKEYS OCULTAS <button class="close-btn" onclick="closeHotkeys()"><i class="fas fa-times"></i></button></h2>
+        <div class="hotkey-row"><div><div class="hotkey-label">Pânico (Google Fake)</div></div><button class="hotkey-input" id="btn-panic" onclick="recordKey('panic')">Nenhuma</button></div>
+        <div class="hotkey-row"><div><div class="hotkey-label">Esconder Sistema</div></div><button class="hotkey-input" id="btn-back" onclick="recordKey('back')">Nenhuma</button></div>
+        <div class="hotkey-row" style="display: block; border:none; padding-bottom:0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;"><div><div class="hotkey-label">Link Personalizado</div></div><button class="hotkey-input" id="btn-custom" onclick="recordKey('custom')">Nenhuma</button></div>
+            <input type="text" id="custom-url" class="input-field" style="margin-top:10px; font-family:monospace; text-align:left;" placeholder="https://..." onchange="saveCustomUrl(this.value)">
+        </div>
+    </div>
+</div>
+
+<div id="gui-layer">
+    <div class="bg-grid"></div>
+    <div class="sys-header">
+        <div class="sys-title"><i class="fas fa-satellite-dish"></i> SYS.CORE</div>
+        <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="openHotkeys()"><i class="fas fa-sliders-h"></i> Teclas</button>
+            <button class="nav-btn" onclick="exitSystem()"><i class="fas fa-power-off"></i> Esconder</button>
+        </div>
+    </div>
+
+    <div class="links-container">
+        
+        <div class="dropdown-container">
+            <div class="link-card" onclick="toggleMenu('neal')">
+                <div class="link-icon"><i class="fas fa-flask"></i></div>
+                <div class="link-content">
+                    <div class="link-title">NEAL.FUN & ESPAÇO</div>
+                    <div class="link-desc">Experimentos de navegador e curiosidades</div>
+                </div>
+                <div class="link-arrow rotate-arrow" id="arrow-neal"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="dropdown-menu" id="menu-neal">
+                <a href="https://neal.fun/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-globe"></i></div><div class="dropdown-text">Site Principal (Neal.Fun)</div></a>
+                <a href="https://neal.fun/infinite-craft/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-infinity"></i></div><div class="dropdown-text">Infinite Craft</div></a>
+                <a href="https://neal.fun/password-game/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-key"></i></div><div class="dropdown-text">The Password Game</div></a>
+                <a href="https://neal.fun/not-a-robot/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-robot"></i></div><div class="dropdown-text">I'm Not a Robot</div></a>
+                <a href="https://neal.fun/perfect-circle/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-circle-notch"></i></div><div class="dropdown-text">Draw a Perfect Circle</div></a>
+                <a href="https://neal.fun/asteroid-launcher/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-meteor"></i></div><div class="dropdown-text">Asteroid Launcher</div></a>
+                <a href="https://mrdoob.com/projects/chromeexperiments/google-space/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fab fa-google"></i></div><div class="dropdown-text">Google Space Gravity</div></a>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <div class="link-card" onclick="toggleMenu('cloud')">
+                <div class="link-icon"><i class="fas fa-cloud"></i></div>
+                <div class="link-content">
+                    <div class="link-title">JOGOS DE CELULAR (CLOUD)</div>
+                    <div class="link-desc">Jogue games mobile direto no navegador</div>
+                </div>
+                <div class="link-arrow rotate-arrow" id="arrow-cloud"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="dropdown-menu" id="menu-cloud">
+                <a href="https://web.cloudmoonapp.com/pt/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-moon"></i></div><div class="dropdown-text">CloudMoon</div></a>
+                <a href="https://www.easyfun.gg/cloud-games.html" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-gamepad"></i></div><div class="dropdown-text">EasyFun.gg</div></a>
+                <a href="https://now.gg/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-mobile-alt"></i></div><div class="dropdown-text">Now.gg</div></a>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <div class="link-card" onclick="toggleMenu('online')">
+                <div class="link-icon"><i class="fas fa-crosshairs"></i></div>
+                <div class="link-content">
+                    <div class="link-title">GAMES ONLINE / LEGAIS</div>
+                    <div class="link-desc">FPS, Corridas e Multiplayer</div>
+                </div>
+                <div class="link-arrow rotate-arrow" id="arrow-online"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="dropdown-menu" id="menu-online">
+                <a href="https://shellshock.io/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-egg"></i></div><div class="dropdown-text">Shell Shockers (FPS OVO)</div></a>
+                <a href="https://krunker.io" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-gun"></i></div><div class="dropdown-text">Krunker.io</div></a>
+                <a href="https://www.kodub.com/apps/polytrack" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-car-side"></i></div><div class="dropdown-text">PolyTrack</div></a>
+                <a href="https://slowroads.io/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-road"></i></div><div class="dropdown-text">Slow Roads</div></a>
+                <a href="https://paperio.site/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-scroll"></i></div><div class="dropdown-text">Paper.io 2</div></a>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <div class="link-card" onclick="toggleMenu('classicos')">
+                <div class="link-icon"><i class="fas fa-cube"></i></div>
+                <div class="link-content">
+                    <div class="link-title">CLÁSSICOS DE NAVEGADOR</div>
+                    <div class="link-desc">EaglerCraft, Subway Surfers, Among Us</div>
+                </div>
+                <div class="link-arrow rotate-arrow" id="arrow-classicos"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="dropdown-menu" id="menu-classicos">
+                <a href="https://eaglercraft.com/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-cubes"></i></div><div class="dropdown-text">EaglerCraft (Minecraft Web)</div></a>
+                <a href="https://poki.com/br/g/subway-surfers#fullscreen" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-train"></i></div><div class="dropdown-text">Subway Surfers</div></a>
+                <a href="https://www.ojogos.com.br/jogo/impostor" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-user-secret"></i></div><div class="dropdown-text">Among Us (Fake)</div></a>
+                <a href="https://quickdraw.withgoogle.com/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-pencil-alt"></i></div><div class="dropdown-text">Quick, Draw!</div></a>
+                <a href="https://littlealchemy2.com/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-vial"></i></div><div class="dropdown-text">Little Alchemy 2</div></a>
+            </div>
+        </div>
+
+        <div class="dropdown-container">
+            <div class="link-card" onclick="toggleMenu('uteis')">
+                <div class="link-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="link-content">
+                    <div class="link-title">FERRAMENTAS ÚTEIS</div>
+                    <div class="link-desc">IAs e ferramentas para o Chromebook</div>
+                </div>
+                <div class="link-arrow rotate-arrow" id="arrow-uteis"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            <div class="dropdown-menu" id="menu-uteis">
+                <a href="https://gemini.google.com/" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-brain"></i></div><div class="dropdown-text">Google Gemini (IA)</div></a>
+                <a href="https://www.deepl.com/translator" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-language"></i></div><div class="dropdown-text">DeepL Tradutor</div></a>
+                <a href="https://www.desmos.com/scientific" target="_blank" class="dropdown-item"><div class="dropdown-icon"><i class="fas fa-calculator"></i></div><div class="dropdown-text">Desmos (Calculadora Científica)</div></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="panic-overlay">
+    <div class="google-nav"><span>Gmail</span><span>Imagens</span><i class="fas fa-bars" style="margin-left:10px; font-size:16px;"></i><img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png" style="width:32px; border-radius:50%; margin-left:10px;"></div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1024px-Google_2015_logo.svg.png" class="google-logo">
+    <div class="google-search"><i class="fas fa-search"></i><input type="text" id="fake-search"><i class="fas fa-microphone" style="margin-left:15px; color:#8ab4f8;"></i></div>
+    <div class="google-btns"><button>Pesquisa Google</button><button>Estou com sorte</button></div>
+</div>
+
+<script>
+// ================= TRADUTOR DE URL (EX: ?matrix) =================
+const ssAliases = {
+    'relogio': 'clock', 'flip': 'flip', 'analogico': 'analog', 'dvd': 'bounce',
+    'matrix': 'matrix', 'binario': 'binary', 'conexoes': 'network',
+    'particulas': 'particles', 'estrelas': 'stars', 'warp': 'warp',
+    'vagalumes': 'fireflies', 'neve': 'snow', 'chuva': 'rain',
+    'ondas': 'wave', 'radar': 'radar', 'pulso': 'pulse'
+};
+
+const urlQuery = window.location.search.substring(1).toLowerCase();
+let initialSS = ssAliases[urlQuery] || urlQuery; 
+
+let activeSS = localStorage.getItem('sys_screensaver') || 'clock';
+
+if (initialSS && document.getElementById('cat-' + initialSS)) {
+    activeSS = initialSS;
+    localStorage.setItem('sys_screensaver', activeSS);
+}
+
+// ================= MOTOR DO PROTETOR DE TELA =================
+const canvas = document.getElementById('ss-canvas'); const ctx = canvas.getContext('2d');
+const clockDiv = document.getElementById('ss-clock'); const flipDiv = document.getElementById('ss-flip'); const analogDiv = document.getElementById('ss-analog');
+
+const fgModels = ['clock', 'flip', 'analog', 'bounce']; 
+let reqAnimFrame; let objs = []; let bounceData = {}; let timeCount = 0;
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+
+// Gerenciador de Configurações
+let ssConfig = JSON.parse(localStorage.getItem('sys_ss_config')) || {};
+function getConfig(key, def) { return (ssConfig[activeSS] && ssConfig[activeSS][key] !== undefined) ? ssConfig[activeSS][key] : def; }
+function setConfig(key, val) { if(!ssConfig[activeSS]) ssConfig[activeSS] = {}; ssConfig[activeSS][key] = val; localStorage.setItem('sys_ss_config', JSON.stringify(ssConfig)); }
+
+function getActiveCanvasMode() { return fgModels.includes(activeSS) ? getConfig('bgAnim', 'none') : activeSS; }
+
+// Função estrita de Cores para evitar bug do seletor HTML (Formato #RRGGBB)
+function getDefaultColor(model) {
+    if(['matrix', 'binary'].includes(model)) return '#00ff00';
+    if(['clock', 'snow'].includes(model)) return '#ffffff';
+    if(model === 'fireflies') return '#facc15';
+    return '#a78bfa'; // Roxo padrão
+}
+
+function hexToRgbA(hex, alpha) {
+    if(!hex || hex.length !== 7) hex = '#a78bfa'; 
+    let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function resizeCanvas() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+function initScreensaver() {
+    cancelAnimationFrame(reqAnimFrame); ctx.clearRect(0, 0, w, h); objs = []; timeCount = 0;
+    clockDiv.style.display = 'none'; flipDiv.style.display = 'none'; analogDiv.style.display = 'none';
+    
+    let canvasMode = getActiveCanvasMode();
+
+    if (canvasMode === 'matrix' || canvasMode === 'binary') {
+        let columns = Math.floor(w / 20); for(let i=0; i<columns; i++) objs[i] = Math.random() * -100;
+    } else if (canvasMode === 'stars') {
+        for(let i=0; i<400; i++) objs.push({ x: Math.random()*w, y: Math.random()*h, z: Math.random()*w });
+    } else if (canvasMode === 'particles' || canvasMode === 'fireflies') {
+        let count = canvasMode === 'fireflies' ? 100 : 50; let spd = canvasMode === 'fireflies' ? 0.3 : 1;
+        for(let i=0; i<count; i++) objs.push({ x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*spd, vy: (Math.random()-0.5)*spd, r: Math.random()*2+1, alpha: Math.random()*0.5+0.2, phase: Math.random()*Math.PI*2 });
+    } else if (canvasMode === 'warp') {
+        for(let i=0; i<200; i++) objs.push({ angle: Math.random()*Math.PI*2, dist: Math.random()*w, speed: Math.random()*2+1 });
+    } else if (canvasMode === 'radar') {
+        objs = { angle: 0 };
+    } else if (canvasMode === 'pulse') {
+        for(let i=0; i<5; i++) objs.push({ r: i*100, alpha: 1 - (i*0.2) });
+    } else if (canvasMode === 'rain' || canvasMode === 'snow') {
+        for(let i=0; i<300; i++) objs.push({ x: Math.random()*w, y: Math.random()*h, speed: canvasMode==='rain'? Math.random()*10+10 : Math.random()*1+0.5, drift: canvasMode==='snow'? Math.random()-0.5 : 0 });
+    } else if (canvasMode === 'wave') {
+        for(let i=0; i<5; i++) objs.push({ yOff: (i-2)*50, speed: 0.02 + i*0.005, phase: i });
+    } else if (canvasMode === 'network') {
+        for(let i=0; i<70; i++) objs.push({ x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*1.5, vy: (Math.random()-0.5)*1.5 });
+    }
+
+    if (activeSS === 'bounce') bounceData = { x: w/2, y: h/2, vx: 3, vy: 3 };
+
+    loopScreensaver();
+}
+
+function loopScreensaver() {
+    const showSeconds = window.innerWidth > window.innerHeight;
+    let canvasMode = getActiveCanvasMode();
+    
+    // Cores Individuais
+    let colorMain = getConfig('color', getDefaultColor(activeSS));
+    let colorBgAnim = getConfig('bgColor', getDefaultColor(canvasMode)); // Cor da animação traseira
+
+    // 1. RENDERIZAR FUNDO (CANVAS)
+    if (canvasMode === 'none') {
+        ctx.fillStyle = getConfig('bg', '#000000'); ctx.fillRect(0, 0, w, h);
+    } else if (canvasMode === 'matrix' || canvasMode === 'binary') {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = colorBgAnim; ctx.font = '15pt monospace';
+        let str = canvasMode === 'binary' ? '01' : chars;
+        for(let i=0; i<objs.length; i++) {
+            ctx.fillText(str.charAt(Math.floor(Math.random() * str.length)), i*20, objs[i]*20);
+            if(objs[i]*20 > h && Math.random() > 0.975) objs[i] = 0;
+            objs[i]++;
+        }
+    } else if (canvasMode === 'stars') {
+        ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fillRect(0, 0, w, h); ctx.fillStyle = colorBgAnim;
+        let cx = w/2, cy = h/2;
+        objs.forEach(s => {
+            s.z -= 2; if(s.z <= 0) { s.x = Math.random()*w; s.y = Math.random()*h; s.z = w; }
+            let x = (s.x - cx) * (w/s.z) + cx; let y = (s.y - cy) * (w/s.z) + cy;
+            ctx.beginPath(); ctx.arc(x, y, (1 - s.z/w)*3, 0, Math.PI*2); ctx.fill();
+        });
+    } else if (canvasMode === 'particles' || canvasMode === 'fireflies') {
+        ctx.fillStyle = getConfig('bg', '#000000'); ctx.fillRect(0, 0, w, h); 
+        objs.forEach(p => {
+            p.x += p.vx; p.y += p.vy; if(p.x<0||p.x>w) p.vx*=-1; if(p.y<0||p.y>h) p.vy*=-1;
+            p.phase += 0.05; let alpha = canvasMode === 'fireflies' ? Math.abs(Math.sin(p.phase)) * p.alpha : p.alpha;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fillStyle = hexToRgbA(colorBgAnim, alpha); ctx.fill();
+            if(canvasMode === 'fireflies') { ctx.shadowBlur = 10; ctx.shadowColor = colorBgAnim; ctx.fill(); ctx.shadowBlur = 0; }
+        });
+    } else if (canvasMode === 'warp') {
+        ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0, 0, w, h);
+        let cx = w/2, cy = h/2;
+        objs.forEach(p => {
+            p.dist += p.speed; p.speed *= 1.05;
+            let x1 = cx + Math.cos(p.angle)*p.dist; let y1 = cy + Math.sin(p.angle)*p.dist;
+            let x2 = cx + Math.cos(p.angle)*(p.dist + p.speed*2); let y2 = cy + Math.sin(p.angle)*(p.dist + p.speed*2);
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+            ctx.strokeStyle = hexToRgbA(colorBgAnim, p.dist/w); ctx.lineWidth = 2; ctx.stroke();
+            if(p.dist > w) { p.dist = Math.random()*100; p.speed = Math.random()*2+1; }
+        });
+    } else if (canvasMode === 'radar') {
+        ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0, 0, w, h);
+        let cx = w/2, cy = h/2, radius = Math.min(w,h)*0.4;
+        ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI*2); ctx.strokeStyle = hexToRgbA(colorBgAnim, 0.2); ctx.stroke();
+        objs.angle += 0.03;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, radius, objs.angle, objs.angle - 0.5, true); ctx.closePath();
+        ctx.fillStyle = hexToRgbA(colorBgAnim, 0.4); ctx.fill();
+    } else if (canvasMode === 'pulse') {
+        ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0, 0, w, h);
+        let cx = w/2, cy = h/2;
+        objs.forEach(p => {
+            p.r += 2; p.alpha -= 0.005;
+            if(p.alpha > 0) { ctx.beginPath(); ctx.arc(cx, cy, p.r, 0, Math.PI*2); ctx.strokeStyle = hexToRgbA(colorBgAnim, p.alpha); ctx.lineWidth = 2; ctx.stroke(); } 
+            else { p.r = 0; p.alpha = 1; }
+        });
+    } else if (canvasMode === 'rain') {
+        ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fillRect(0, 0, w, h); ctx.fillStyle = colorBgAnim;
+        objs.forEach(p => { p.y += p.speed; if(p.y > h) { p.y = -20; p.x = Math.random()*w; } ctx.fillRect(p.x, p.y, 2, 15); });
+    } else if (canvasMode === 'snow') {
+        ctx.fillStyle = getConfig('bg', '#000000'); ctx.fillRect(0, 0, w, h); ctx.fillStyle = colorBgAnim;
+        objs.forEach(p => {
+            p.y += p.speed; p.x += p.drift; if(p.y > h) { p.y = -10; p.x = Math.random()*w; }
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.speed*1.5, 0, Math.PI*2); ctx.fill();
+        });
+    } else if (canvasMode === 'wave') {
+        ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,w,h); ctx.lineWidth = 2;
+        objs.forEach(wL => {
+            wL.phase += wL.speed; ctx.beginPath(); ctx.strokeStyle = hexToRgbA(colorBgAnim, 0.5);
+            for(let x=0; x<w; x+=20) { let y = h/2 + wL.yOff + Math.sin(x*0.01 + wL.phase)*50; if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+            ctx.stroke();
+        });
+    } else if (canvasMode === 'network') {
+        ctx.fillStyle = getConfig('bg', '#000000'); ctx.fillRect(0,0,w,h);
+        ctx.fillStyle = colorBgAnim; ctx.strokeStyle = colorBgAnim;
+        for(let i=0; i<objs.length; i++) {
+            let p1 = objs[i]; p1.x += p1.vx; p1.y += p1.vy;
+            if(p1.x<0||p1.x>w) p1.vx*=-1; if(p1.y<0||p1.y>h) p1.vy*=-1;
+            ctx.beginPath(); ctx.arc(p1.x, p1.y, 2, 0, Math.PI*2); ctx.fill();
+            for(let j=i+1; j<objs.length; j++) {
+                let p2 = objs[j]; let dist = Math.sqrt((p1.x-p2.x)**2 + (p1.y-p2.y)**2);
+                if(dist < 120) { ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.globalAlpha = 1 - dist/120; ctx.stroke(); ctx.globalAlpha = 1; }
+            }
+        }
+    }
+
+    // 2. RENDERIZAR FOREGROUND (Modelos DOM/Relógios)
+    if (fgModels.includes(activeSS)) {
+        if (activeSS === 'clock') {
+            clockDiv.style.display = 'block'; clockDiv.style.color = colorMain;
+            let now = new Date(); let sec = showSeconds ? ':' + now.getSeconds().toString().padStart(2, '0') : '';
+            clockDiv.innerText = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0') + sec;
+        } else if (activeSS === 'flip') {
+            flipDiv.style.display = 'flex'; document.querySelectorAll('.flip-card').forEach(c => c.style.color = colorMain);
+            let now = new Date();
+            document.getElementById('flip-h').innerText = now.getHours().toString().padStart(2, '0');
+            document.getElementById('flip-m').innerText = now.getMinutes().toString().padStart(2, '0');
+            let fSec = document.getElementById('flip-s');
+            if(showSeconds) { fSec.style.display = 'block'; fSec.innerText = now.getSeconds().toString().padStart(2, '0'); } else { fSec.style.display = 'none'; }
+        } else if (activeSS === 'analog') {
+            analogDiv.style.display = 'block';
+            analogDiv.style.borderColor = hexToRgbA(colorMain, 0.4);
+            analogDiv.style.boxShadow = `0 0 50px ${hexToRgbA(colorMain, 0.2)}, inset 0 0 50px ${hexToRgbA(colorMain, 0.1)}`;
+            document.querySelector('.minute-hand').style.background = colorMain;
+            let now = new Date(); let hr = now.getHours() % 12; let min = now.getMinutes(); let sec = now.getSeconds();
+            document.getElementById('hand-h').style.transform = `translate(-50%, 0) rotate(${hr*30 + min*0.5}deg)`;
+            document.getElementById('hand-m').style.transform = `translate(-50%, 0) rotate(${min*6}deg)`;
+            let aSec = document.getElementById('hand-s');
+            if(showSeconds) { aSec.style.display = 'block'; aSec.style.transform = `translate(-50%, 0) rotate(${sec*6}deg)`; } else { aSec.style.display = 'none'; }
+        } else if (activeSS === 'bounce') {
+            bounceData.x += bounceData.vx; bounceData.y += bounceData.vy;
+            let txt = getConfig('text', 'lp77.com.br');
+            ctx.font = 'bold 45px Orbitron'; ctx.fillStyle = colorMain; ctx.globalAlpha = 1;
+            let textWidth = ctx.measureText(txt).width;
+            if(bounceData.x + textWidth/2 > w || bounceData.x - textWidth/2 < 0) bounceData.vx *= -1;
+            if(bounceData.y > h || bounceData.y - 40 < 0) bounceData.vy *= -1;
+            ctx.shadowColor = '#000'; ctx.shadowBlur = 15; ctx.fillText(txt, bounceData.x - textWidth/2, bounceData.y); ctx.shadowBlur = 0;
+        }
+    }
+
+    timeCount++;
+    reqAnimFrame = requestAnimationFrame(loopScreensaver);
+}
+initScreensaver();
+
+function setScreensaver(type) {
+    activeSS = type; localStorage.setItem('sys_screensaver', type);
+    document.querySelectorAll('.catalog-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('cat-' + type).classList.add('active');
+    initScreensaver(); closeCatalog();
+}
+document.addEventListener("DOMContentLoaded", () => { if(document.getElementById('cat-' + activeSS)) document.getElementById('cat-' + activeSS).classList.add('active'); });
+
+// ================= MENUS MODAIS =================
+function showModal(id) { const m = document.getElementById(id); m.style.display = 'flex'; setTimeout(() => { m.classList.add('active'); }, 20); }
+function hideModal(id) { const m = document.getElementById(id); m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; }, 300); }
+
+function openCatalog() { showModal('catalog-modal'); }
+function closeCatalog() { hideModal('catalog-modal'); }
+
+// ================= MOTOR DE CONFIGURAÇÕES AVANÇADO (⚙️) =================
+function openSSConfig() {
+    const box = document.getElementById('ss-config-content'); box.innerHTML = '';
+    
+    // Cor do Elemento Principal
+    let colorDef = getDefaultColor(activeSS);
+    box.innerHTML += `<div class="setting-group"><div class="setting-label">Cor Principal</div><input type="color" class="setting-input" value="${getConfig('color', colorDef)}" onchange="setConfig('color', this.value);"></div>`;
+    
+    if(fgModels.includes(activeSS)) {
+        // Cor do Fundo Preto/Sólido
+        box.innerHTML += `<div class="setting-group"><div class="setting-label">Cor de Fundo Sólido</div><input type="color" class="setting-input" value="${getConfig('bg', '#000000')}" onchange="setConfig('bg', this.value);"></div>`;
+        
+        // Select de Animação de Fundo
+        let anims = { 'none': 'Nenhuma', 'matrix': 'Matrix Code', 'binary': 'Dados Binários', 'network': 'Conexões Neurais', 'stars': 'Hiperespaço', 'particles': 'Partículas Neon', 'fireflies': 'Vagalumes', 'snow': 'Neve Leve', 'rain': 'Chuva Rápida', 'wave': 'Ondas Sonoras', 'warp': 'Warp Speed', 'radar': 'Radar Sonar', 'pulse': 'Pulso Tech' };
+        let currentBgAnim = getConfig('bgAnim', 'none');
+        let selectHTML = `<select class="setting-input" style="width:140px;" onchange="setConfig('bgAnim', this.value); if(this.value!=='none') { document.getElementById('row-bg-color').style.display='flex'; setConfig('bgColor', getDefaultColor(this.value)); } else { document.getElementById('row-bg-color').style.display='none'; }">`;
+        for (let key in anims) { let sel = currentBgAnim === key ? 'selected' : ''; selectHTML += `<option value="${key}" ${sel}>${anims[key]}</option>`; }
+        selectHTML += `</select>`;
+        box.innerHTML += `<div class="setting-group"><div class="setting-label">Animação Traseira</div>${selectHTML}</div>`;
+        
+        // Cor Secundária (Para a Animação de fundo, se não for "Nenhuma")
+        let bgDisp = currentBgAnim !== 'none' ? 'flex' : 'none';
+        let bgColorDef = getDefaultColor(currentBgAnim);
+        box.innerHTML += `<div class="setting-group" id="row-bg-color" style="display:${bgDisp};"><div class="setting-label">Cor da Animação</div><input type="color" class="setting-input" value="${getConfig('bgColor', bgColorDef)}" onchange="setConfig('bgColor', this.value);"></div>`;
+        
+        // Texto do DVD Bounce
+        if(activeSS === 'bounce') {
+            box.innerHTML += `<div class="setting-group" style="border:none; margin-bottom:0;"><div class="setting-label">Texto Flutuante</div><input type="text" class="setting-input" style="width:120px;" value="${getConfig('text', 'lp77.com.br')}" onkeyup="setConfig('text', this.value);"></div>`;
+        }
+    }
+    showModal('ss-config-modal');
+}
+function closeSSConfig() { hideModal('ss-config-modal'); }
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => console.log(err));
+    else document.exitFullscreen();
+}
+document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) document.body.classList.add('is-fullscreen');
+    else document.body.classList.remove('is-fullscreen');
+});
+
+// ================= SISTEMA DE 3 CLIQUES & LOGIN =================
+function openLogin() { showModal('login-modal'); document.getElementById('user-input').focus(); }
+function closeLogin() { hideModal('login-modal'); document.getElementById('login-error').style.opacity = '0'; }
+
+let clickCount = 0; let clickTimer;
+function handleSecretClick() {
+    clickCount++; clearTimeout(clickTimer);
+    if(clickCount >= 3) { clickCount = 0; openLogin(); } 
+    else { clickTimer = setTimeout(() => { clickCount = 0; }, 600); } 
+}
+
+function tryLogin() {
+    let u = document.getElementById('user-input').value.toLowerCase(); let p = document.getElementById('pass-input').value.toLowerCase();
+    if((u === 'gg' && p === 'gg') || (u === 'll' && p === 'll')) {
+        closeLogin(); document.getElementById('user-input').value = ''; document.getElementById('pass-input').value = '';
+        document.getElementById('screensaver-layer').classList.add('hidden');
+        
+        const gui = document.getElementById('gui-layer');
+        gui.style.display = 'flex';
+        void gui.offsetWidth; // Força re-render
+        gui.classList.add('active');
+    } else { document.getElementById('login-error').style.opacity = '1'; }
+}
+document.getElementById('pass-input').addEventListener('keypress', e => { if(e.key === 'Enter') tryLogin(); });
+
+function exitSystem() {
+    const gui = document.getElementById('gui-layer');
+    gui.classList.remove('active');
+    setTimeout(() => { gui.style.display = 'none'; document.getElementById('screensaver-layer').classList.remove('hidden'); }, 600);
+}
+
+// ================= MENU DA GUI =================
+function toggleMenu(id) {
+    const menu = document.getElementById('menu-' + id); const arrow = document.getElementById('arrow-' + id);
+    if(menu.classList.contains('active')) { menu.classList.remove('active'); arrow.classList.remove('active'); } 
+    else { document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active')); document.querySelectorAll('.rotate-arrow').forEach(a => a.classList.remove('active')); menu.classList.add('active'); arrow.classList.add('active'); }
+}
+
+function openHotkeys() { showModal('hotkeys-modal'); }
+function closeHotkeys() { hideModal('hotkeys-modal'); }
+
+// ================= HOTKEYS & TECLADO =================
+let recordingKeyFor = null;
+let hotkeys = JSON.parse(localStorage.getItem('sys_hotkeys')) || { panic: null, back: null, custom: null };
+let customUrl = localStorage.getItem('sys_custom_url') || '';
+
+function loadSettings() {
+    if(hotkeys.panic) document.getElementById('btn-panic').innerText = hotkeys.panic;
+    if(hotkeys.back) document.getElementById('btn-back').innerText = hotkeys.back;
+    if(hotkeys.custom) document.getElementById('btn-custom').innerText = hotkeys.custom;
+    document.getElementById('custom-url').value = customUrl;
+}
+loadSettings();
+
+function recordKey(action) {
+    if(recordingKeyFor) return; recordingKeyFor = action;
+    const btn = document.getElementById('btn-' + action); btn.innerText = 'Aperte...'; btn.classList.add('recording');
+}
+function saveCustomUrl(val) { customUrl = val; localStorage.setItem('sys_custom_url', customUrl); }
+
+window.addEventListener('keydown', (e) => {
+    // Atalho 'E' para Login (Apenas no protetor e se nenhum modal estiver aberto)
+    if((e.key === 'e' || e.key === 'E') && document.getElementById('gui-layer').style.display !== 'flex' && document.querySelectorAll('.modal-overlay.active').length === 0) {
+        openLogin(); return;
+    }
+    if(document.getElementById('panic-overlay').style.display === 'flex') {
+        if(e.code === 'Escape' || e.code === hotkeys.panic) document.getElementById('panic-overlay').style.display = 'none';
+        return;
+    }
+    if(recordingKeyFor) {
+        e.preventDefault(); hotkeys[recordingKeyFor] = e.code; localStorage.setItem('sys_hotkeys', JSON.stringify(hotkeys));
+        const btn = document.getElementById('btn-' + recordingKeyFor); btn.innerText = e.code; btn.classList.remove('recording');
+        recordingKeyFor = null; return;
+    }
+    if (e.code === hotkeys.panic) { document.getElementById('panic-overlay').style.display = 'flex'; document.getElementById('fake-search').focus(); } 
+    else if (e.code === hotkeys.back && document.getElementById('gui-layer').style.display === 'flex') { exitSystem(); } 
+    else if (e.code === hotkeys.custom) { if(customUrl) window.open(customUrl, '_blank'); else alert('Configure a URL!'); }
+});
+</script>
+</body>
+</html>
