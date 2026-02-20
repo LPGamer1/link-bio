@@ -15,8 +15,7 @@ body { background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 3px; }
-
-/* ================= SCREENSAVER LAYER ================= */
+ 
 #screensaver-layer { 
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
     z-index: 10; transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1); 
@@ -26,7 +25,6 @@ body { background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; 
 
 #ss-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
-/* Modelos DOM (Relógios) */
 #ss-clock { font-family: 'Orbitron', sans-serif; font-size: 8rem; font-weight: 700; z-index: 2; text-shadow: 0 0 30px rgba(0,0,0,0.8); display: none; pointer-events: none; letter-spacing: 5px; }
 @media (max-width: 768px) { #ss-clock { font-size: 4rem; } }
 
@@ -42,14 +40,12 @@ body { background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; 
 .minute-hand { width: 4px; height: 130px; z-index: 6; margin-left: -2px; }
 .second-hand { width: 2px; height: 150px; background: #ef4444; z-index: 7; margin-left: -1px; }
 
-/* Área de Clique Triplo (Canto Inferior Direito) - Cursor Migué (Seta normal) */
 #ss-click-area { 
     position: absolute; bottom: 0; right: 0; width: 15vw; height: 15vw; 
     min-width: 120px; min-height: 120px; max-width: 250px; max-height: 250px; 
     z-index: 30; cursor: default; 
 }
 
-/* UI Controls (Rodapé) */
 #ss-ui-controls {
     position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
     display: flex; gap: 15px; z-index: 20; transition: opacity 0.5s ease;
@@ -63,7 +59,6 @@ body { background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; 
 .ss-btn:hover { background: rgba(124, 58, 237, 0.5); color: #fff; border-color: #8b5cf6; }
 body.is-fullscreen #ss-ui-controls { opacity: 0; pointer-events: none; }
 
-/* ================= GUI LAYER (Sistema Operacional) ================= */
 #gui-layer { 
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
     z-index: 40; display: none; opacity: 0; flex-direction: column; align-items: center; 
@@ -101,7 +96,6 @@ body.is-fullscreen #ss-ui-controls { opacity: 0; pointer-events: none; }
 .rotate-arrow { transition: transform 0.3s ease; }
 .rotate-arrow.active { transform: rotate(180deg); color: #a78bfa; }
 
-/* ================= MODALS ================= */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
@@ -121,7 +115,6 @@ body.is-fullscreen #ss-ui-controls { opacity: 0; pointer-events: none; }
 .btn-submit:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(124, 58, 237, 0.5); }
 .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 1rem; opacity: 0; transition: 0.3s; font-weight: bold;}
 
-/* Catálogo de Protetores (16 Opções) */
 #catalog-modal .box { max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative;}
 .catalog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px; }
 .catalog-item { background: rgba(20,20,25,0.8); border: 1px solid #333; border-radius: 10px; padding: 15px 5px; cursor: pointer; transition: 0.3s; color: #aaa; font-family: 'Orbitron'; font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
@@ -129,27 +122,23 @@ body.is-fullscreen #ss-ui-controls { opacity: 0; pointer-events: none; }
 .catalog-item:hover { border-color: #a78bfa; background: rgba(124, 58, 237, 0.1); color: #fff; transform: translateY(-3px); }
 .catalog-item.active { border-color: #8b5cf6; background: rgba(124, 58, 237, 0.3); color: #fff; box-shadow: 0 0 15px rgba(124, 58, 237, 0.4); }
 
-/* Rodapé do Catálogo com Botões Extras */
 .footer-catalog-container { margin-top: 20px; border-top: 1px solid #222; padding-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
 .footer-links { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
 .footer-btn { background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); color: #a78bfa; font-family: 'Orbitron'; font-size: 0.8rem; padding: 8px 15px; border-radius: 8px; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
 .footer-btn:hover { background: rgba(124, 58, 237, 0.3); color: #fff; border-color: #8b5cf6; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(124, 58, 237, 0.2); }
 .footer-catalog { font-family: 'Orbitron'; font-size: 0.8rem; color: #555; text-align: center; letter-spacing: 4px; }
 
-/* Configurações (Engrenagem) */
 .setting-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #222; text-align: left;}
 .setting-label { font-size: 0.9rem; font-family: 'Rajdhani'; color: #ddd; }
 .setting-input { background: #111; border: 1px solid #555; border-radius: 5px; color: #a78bfa; padding: 8px; outline: none; font-family: 'Rajdhani'; font-weight: 600; cursor: pointer;}
 input[type="color"] { width: 50px; height: 35px; padding: 0; cursor: pointer; border: none; background: transparent; }
 
-/* Hotkeys Modal */
 .hotkey-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #222; text-align: left; }
 .hotkey-label { font-size: 1rem; font-weight: 600; }
 .hotkey-desc { font-size: 0.8rem; color: #777; }
 .hotkey-input { background: #111; border: 1px solid #444; color: #a78bfa; padding: 8px 15px; border-radius: 5px; font-family: 'Orbitron'; cursor: pointer; min-width: 100px; text-align: center; transition: 0.3s;}
 .hotkey-input.recording { background: #8b5cf6; color: #fff; animation: pulse 1s infinite; }
 
-/* ================= FAKE GOOGLE ================= */
 #panic-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #202124; z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; font-family: Arial, sans-serif; }
 .google-nav { position: absolute; top: 15px; right: 20px; display: flex; gap: 15px; align-items: center; color: #e8eaed; font-size: 13px; }
 .google-logo { width: 272px; margin-bottom: 30px; filter: invert(1) brightness(0.9) contrast(1.2); }
@@ -364,7 +353,6 @@ input[type="color"] { width: 50px; height: 35px; padding: 0; cursor: pointer; bo
 </div>
 
 <script>
-// ================= TRADUTOR DE URL (EX: ?matrix) =================
 const ssAliases = {
     'relogio': 'clock', 'flip': 'flip', 'analogico': 'analog', 'dvd': 'bounce',
     'matrix': 'matrix', 'binario': 'binary', 'conexoes': 'network',
@@ -383,7 +371,6 @@ if (initialSS && document.getElementById('cat-' + initialSS)) {
     localStorage.setItem('sys_screensaver', activeSS);
 }
 
-// ================= MOTOR DO PROTETOR DE TELA =================
 const canvas = document.getElementById('ss-canvas'); const ctx = canvas.getContext('2d');
 const clockDiv = document.getElementById('ss-clock'); const flipDiv = document.getElementById('ss-flip'); const analogDiv = document.getElementById('ss-analog');
 
@@ -391,19 +378,17 @@ const fgModels = ['clock', 'flip', 'analog', 'bounce'];
 let reqAnimFrame; let objs = []; let bounceData = {}; let timeCount = 0;
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
 
-// Gerenciador de Configurações
 let ssConfig = JSON.parse(localStorage.getItem('sys_ss_config')) || {};
 function getConfig(key, def) { return (ssConfig[activeSS] && ssConfig[activeSS][key] !== undefined) ? ssConfig[activeSS][key] : def; }
 function setConfig(key, val) { if(!ssConfig[activeSS]) ssConfig[activeSS] = {}; ssConfig[activeSS][key] = val; localStorage.setItem('sys_ss_config', JSON.stringify(ssConfig)); }
 
 function getActiveCanvasMode() { return fgModels.includes(activeSS) ? getConfig('bgAnim', 'none') : activeSS; }
 
-// Função estrita de Cores para evitar bug do seletor HTML (Formato #RRGGBB)
 function getDefaultColor(model) {
     if(['matrix', 'binary'].includes(model)) return '#00ff00';
     if(['clock', 'snow'].includes(model)) return '#ffffff';
     if(model === 'fireflies') return '#facc15';
-    return '#a78bfa'; // Roxo padrão
+    return '#a78bfa';
 }
 
 function hexToRgbA(hex, alpha) {
@@ -451,11 +436,9 @@ function loopScreensaver() {
     const showSeconds = window.innerWidth > window.innerHeight;
     let canvasMode = getActiveCanvasMode();
     
-    // Cores Individuais
     let colorMain = getConfig('color', getDefaultColor(activeSS));
     let colorBgAnim = getConfig('bgColor', getDefaultColor(canvasMode)); // Cor da animação traseira
 
-    // 1. RENDERIZAR FUNDO (CANVAS)
     if (canvasMode === 'none') {
         ctx.fillStyle = getConfig('bg', '#000000'); ctx.fillRect(0, 0, w, h);
     } else if (canvasMode === 'matrix' || canvasMode === 'binary') {
@@ -539,7 +522,6 @@ function loopScreensaver() {
         }
     }
 
-    // 2. RENDERIZAR FOREGROUND (Modelos DOM/Relógios)
     if (fgModels.includes(activeSS)) {
         if (activeSS === 'clock') {
             clockDiv.style.display = 'block'; clockDiv.style.color = colorMain;
@@ -586,26 +568,21 @@ function setScreensaver(type) {
 }
 document.addEventListener("DOMContentLoaded", () => { if(document.getElementById('cat-' + activeSS)) document.getElementById('cat-' + activeSS).classList.add('active'); });
 
-// ================= MENUS MODAIS =================
 function showModal(id) { const m = document.getElementById(id); m.style.display = 'flex'; setTimeout(() => { m.classList.add('active'); }, 20); }
 function hideModal(id) { const m = document.getElementById(id); m.classList.remove('active'); setTimeout(() => { m.style.display = 'none'; }, 300); }
 
 function openCatalog() { showModal('catalog-modal'); }
 function closeCatalog() { hideModal('catalog-modal'); }
 
-// ================= MOTOR DE CONFIGURAÇÕES AVANÇADO (⚙️) =================
 function openSSConfig() {
     const box = document.getElementById('ss-config-content'); box.innerHTML = '';
     
-    // Cor do Elemento Principal
     let colorDef = getDefaultColor(activeSS);
     box.innerHTML += `<div class="setting-group"><div class="setting-label">Cor Principal</div><input type="color" class="setting-input" value="${getConfig('color', colorDef)}" onchange="setConfig('color', this.value);"></div>`;
     
     if(fgModels.includes(activeSS)) {
-        // Cor do Fundo Preto/Sólido
         box.innerHTML += `<div class="setting-group"><div class="setting-label">Cor de Fundo Sólido</div><input type="color" class="setting-input" value="${getConfig('bg', '#000000')}" onchange="setConfig('bg', this.value);"></div>`;
         
-        // Select de Animação de Fundo
         let anims = { 'none': 'Nenhuma', 'matrix': 'Matrix Code', 'binary': 'Dados Binários', 'network': 'Conexões Neurais', 'stars': 'Hiperespaço', 'particles': 'Partículas Neon', 'fireflies': 'Vagalumes', 'snow': 'Neve Leve', 'rain': 'Chuva Rápida', 'wave': 'Ondas Sonoras', 'warp': 'Warp Speed', 'radar': 'Radar Sonar', 'pulse': 'Pulso Tech' };
         let currentBgAnim = getConfig('bgAnim', 'none');
         let selectHTML = `<select class="setting-input" style="width:140px;" onchange="setConfig('bgAnim', this.value); if(this.value!=='none') { document.getElementById('row-bg-color').style.display='flex'; setConfig('bgColor', getDefaultColor(this.value)); } else { document.getElementById('row-bg-color').style.display='none'; }">`;
@@ -613,12 +590,10 @@ function openSSConfig() {
         selectHTML += `</select>`;
         box.innerHTML += `<div class="setting-group"><div class="setting-label">Animação Traseira</div>${selectHTML}</div>`;
         
-        // Cor Secundária (Para a Animação de fundo, se não for "Nenhuma")
         let bgDisp = currentBgAnim !== 'none' ? 'flex' : 'none';
         let bgColorDef = getDefaultColor(currentBgAnim);
         box.innerHTML += `<div class="setting-group" id="row-bg-color" style="display:${bgDisp};"><div class="setting-label">Cor da Animação</div><input type="color" class="setting-input" value="${getConfig('bgColor', bgColorDef)}" onchange="setConfig('bgColor', this.value);"></div>`;
         
-        // Texto do DVD Bounce
         if(activeSS === 'bounce') {
             box.innerHTML += `<div class="setting-group" style="border:none; margin-bottom:0;"><div class="setting-label">Texto Flutuante</div><input type="text" class="setting-input" style="width:120px;" value="${getConfig('text', 'lp77.com.br')}" onkeyup="setConfig('text', this.value);"></div>`;
         }
@@ -636,7 +611,6 @@ document.addEventListener('fullscreenchange', () => {
     else document.body.classList.remove('is-fullscreen');
 });
 
-// ================= SISTEMA DE 3 CLIQUES & LOGIN =================
 function openLogin() { showModal('login-modal'); document.getElementById('user-input').focus(); }
 function closeLogin() { hideModal('login-modal'); document.getElementById('login-error').style.opacity = '0'; }
 
@@ -655,7 +629,7 @@ function tryLogin() {
         
         const gui = document.getElementById('gui-layer');
         gui.style.display = 'flex';
-        void gui.offsetWidth; // Força re-render
+        void gui.offsetWidth;
         gui.classList.add('active');
     } else { document.getElementById('login-error').style.opacity = '1'; }
 }
@@ -667,7 +641,6 @@ function exitSystem() {
     setTimeout(() => { gui.style.display = 'none'; document.getElementById('screensaver-layer').classList.remove('hidden'); }, 600);
 }
 
-// ================= MENU DA GUI =================
 function toggleMenu(id) {
     const menu = document.getElementById('menu-' + id); const arrow = document.getElementById('arrow-' + id);
     if(menu.classList.contains('active')) { menu.classList.remove('active'); arrow.classList.remove('active'); } 
@@ -677,7 +650,6 @@ function toggleMenu(id) {
 function openHotkeys() { showModal('hotkeys-modal'); }
 function closeHotkeys() { hideModal('hotkeys-modal'); }
 
-// ================= HOTKEYS & TECLADO =================
 let recordingKeyFor = null;
 let hotkeys = JSON.parse(localStorage.getItem('sys_hotkeys')) || { panic: null, back: null, custom: null };
 let customUrl = localStorage.getItem('sys_custom_url') || '';
@@ -697,7 +669,6 @@ function recordKey(action) {
 function saveCustomUrl(val) { customUrl = val; localStorage.setItem('sys_custom_url', customUrl); }
 
 window.addEventListener('keydown', (e) => {
-    // Atalho 'E' para Login (Apenas no protetor e se nenhum modal estiver aberto)
     if((e.key === 'e' || e.key === 'E') && document.getElementById('gui-layer').style.display !== 'flex' && document.querySelectorAll('.modal-overlay.active').length === 0) {
         openLogin(); return;
     }
