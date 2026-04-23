@@ -131,7 +131,7 @@
         <h1>LP77</h1>
         <p>Estamos de casa nova para melhor te atender. Agora estamos em:</p>
         
-        <div class="domain-badge" id="badge-display">bio.lp77.one</div>
+        <div class="domain-badge">bio.lp77.one</div>
         
         <a href="https://bio.lp77.one" class="btn-link" id="redirect-link">ACESSAR NOVO SITE</a>
     </div>
@@ -139,8 +139,6 @@
     <script>
         const domain = "bio.lp77.one";
         const pathInfo = window.location.pathname + window.location.search + window.location.hash;
-        
-        document.getElementById("badge-display").innerText = domain + window.location.pathname;
         document.getElementById("redirect-link").href = "https://" + domain + pathInfo;
     </script>
 
